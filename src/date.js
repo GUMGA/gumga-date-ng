@@ -85,7 +85,7 @@
                self.gumgaDateValue = self.ngModel;
                self.setNgModel(self.gumgaDateValue)
             }else if(self.ngModel && (typeof self.ngModel == "string")){
-              var date = moment(self.ngModel).toDate();
+              let date = moment(self.ngModel).toDate();
               self.gumgaDateValue = date;
               self.setNgModel(self.gumgaDateValue);
             }else{
@@ -247,6 +247,20 @@
 
           self.$watch('config', () => {
             init();
+          }, true)
+
+          self.$watch('ngModel', (value) => {
+            if(self.ngModel && (self.ngModel instanceof Date)){
+               self.gumgaDateValue = self.ngModel;
+               newCalendar(value.getMonth(), value.getFullYear());
+               self.value = formatDate(angular.copy(value), self.inputFormat);
+            }
+            if(self.ngModel && (typeof self.ngModel == "string")){
+              let date = moment(self.ngModel).toDate();
+              self.gumgaDateValue = date;
+              newCalendar(date.getMonth(), date.getFullYear());
+              self.value = formatDate(angular.copy(date), self.inputFormat);
+            }
           }, true)
 
           self.$watch('value', (value) => value ? self.setGumgaDateValue(value) : self.ngModel = null);

@@ -3,12 +3,16 @@
     angular.module('app', ['gumga.date'])
       .controller('ctrl', function($scope, GumgaDateService){
 
-        $scope.nascimento = "1953-03-15T12:18:25-03:00"
+
 
         GumgaDateService.setDefaultConfiguration({
           fontColor: '#fff',
         })
 
+
+        $scope.teste = function(){
+          $scope.nascimento = "1953-03-15T12:23:25-03:00";
+        }
 
         $scope.config = {
           fontColor: '#FFF',
