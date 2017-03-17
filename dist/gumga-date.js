@@ -29,6 +29,7 @@
         };
 
         self.range = function (min, max, step) {
+          if (!self.opened) return [];
           step = step || 1;
           var input = [];
           for (var i = min; i <= max; i += step) {
@@ -90,7 +91,6 @@
             self.setNgModel(self.gumgaDateValue);
           } else {
             self.gumgaDateValue = new Date();
-            newCalendar(self.gumgaDateValue.getMonth(), self.gumgaDateValue.getFullYear());
           }
 
           if (self.type == 'HOUR') {
@@ -110,6 +110,7 @@
         self.alterView = function (view) {
           self.view = view;
           if (view == 'months') {
+            if (!self.years) self.years = self.range(self.getMinYear(), self.getMaxYear());
             handlingScroll();
           }
         };
@@ -229,6 +230,7 @@
         self.config.open = function (event) {
           if (event) event.stopPropagation();
           self.opened = true;
+          newCalendar(self.gumgaDateValue.getMonth(), self.gumgaDateValue.getFullYear());
         };
 
         self.config.close = function () {
@@ -291,6 +293,7 @@
         });
 
         var newCalendar = function newCalendar(mouth, year) {
+          if (!self.opened) return;
           var primaryDay = new Date(year, mouth, 1),
               count = 1;
           var possibilities = new Array(42);
@@ -897,6 +900,6 @@ var _dateStyle2 = _interopRequireDefault(_dateStyle);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-exports.default = '\n  <style>' + _dateStyle2.default + '</style>\n\n  <input  ng-focus="config.open()"\n          ng-model="value"\n          gumga-date-mask="{{mask}}"\n          ng-disabled="ngDisabled"\n          class="gumga-date-input {{inputProperties.class}}"\n          placeholder="{{inputProperties.placeholder}} "/>\n\n\n\n  <div class="gumga-date" ng-show="opened" id="gumga-date-{{uid}}">\n    <div class="month" style="background:{{config.background ? config.background : getDefaultConfiguration().background}}">\n      <ul>\n        <span data-ng-click="alterView(\'hours\')"\n              ng-hide="type == \'DATE\'" ng-show="view != \'hours\' || type == \'HOUR\'"\n              class="hours">\n              {{gumgaDateValue.getHours() < 10 ? "0"+gumgaDateValue.getHours() : gumgaDateValue.getHours()}}\n                :\n              {{gumgaDateValue.getMinutes() < 10 ? "0"+gumgaDateValue.getMinutes() : gumgaDateValue.getMinutes()}}\n              </span><br>\n\n        <span data-ng-click="alterView(\'days\')"\n              ng-show="view == \'hours\' && (type == \'DATE\' || type == \'DATE_HOUR\') || type == \'DATE\'"\n              class="hours">{{value}}</span>\n\n        <br>\n        <li ng-show="view != \'hours\' && (type == \'DATE\' || type == \'DATE_HOUR\')" class="prev" ng-click="handlingMonths(gumgaDateValue, -1)">&#10094;</li>\n        <li ng-show="view != \'hours\' && (type == \'DATE\' || type == \'DATE_HOUR\')" class="next" ng-click="handlingMonths(gumgaDateValue, +1)">&#10095;</li>\n        <li ng-show="view != \'hours\' && (type == \'DATE\' || type == \'DATE_HOUR\')" style="text-align:center">\n          <span data-ng-click="alterView(\'months\')">{{getMonth()}}</span><br>\n          <span data-ng-click="alterView(\'months\')" style="font-size:18px">{{getYear()}}</span>\n        </li>\n\n        <div class="gumga-date-hour" ng-show="view == \'hours\'">\n            <span class="glyphicon glyphicon-chevron-up" ng-click="handlingHours(1)"></span>\n              <li>{{gumgaDateValue.getHours() < 10 ? "0"+gumgaDateValue.getHours() : gumgaDateValue.getHours()}}</li>\n            <span class="glyphicon glyphicon-chevron-down" ng-click="handlingHours(-1)"></span>\n        </div>\n        <div ng-show="view == \'hours\'" class="gumga-date-separator">\n          <span>:</span>\n        </div>\n        <div class="gumga-date-minutes" ng-show="view == \'hours\'">\n          <span class="glyphicon glyphicon-chevron-up" ng-click="handlingMinutes(1)"></span>\n            <li >{{gumgaDateValue.getMinutes() < 10 ? "0"+gumgaDateValue.getMinutes() : gumgaDateValue.getMinutes()}}</li>\n          <span class="glyphicon glyphicon-chevron-down" ng-click="handlingMinutes(-1)"></span>\n        </div>\n\n      </ul>\n    </div>\n\n    <div class="year-and-month" id="year-and-month-{{uid}}">\n      <ul class="change-month" ng-show="view == \'months\'" ng-repeat="year in range(getMinYear(), getMaxYear())">\n        <span class="year">{{year}}</span>\n\n        <div style="width: 170px;float: right;">\n          <li data-ng-repeat="month in getGumgaMonths(true)" data-ng-click="setYearAndMonth(year, month)">\n            <span ng-class="{\'active\' : isThatMonth(year, month)}">{{month}}</span>\n          </li>\n        </div>\n\n      </ul>\n    </div>\n\n    <ul class="weekdays" ng-show="view == \'days\'">\n      <li ng-repeat="weekday in getWeekDays()">{{weekday}}</li>\n    </ul>\n    <ul class="days" ng-show="view == \'days\'">\n      <li data-ng-click="setDay(row)" data-ng-repeat="row in rows track by $index">\n          <span ng-class="{\'active\' : isToday(row)}" style="{{row.style}}">{{row.value}}</span>\n      </li>\n    </ul>\n  </div>\n\n';
+exports.default = '\n  <style>' + _dateStyle2.default + '</style>\n\n  <input  ng-focus="config.open()"\n          ng-model="value"\n          gumga-date-mask="{{mask}}"\n          ng-disabled="ngDisabled"\n          class="gumga-date-input {{inputProperties.class}}"\n          placeholder="{{inputProperties.placeholder}} "/>\n\n\n\n  <div class="gumga-date" ng-show="opened" id="gumga-date-{{uid}}">\n    <div class="month" style="background:{{config.background ? config.background : getDefaultConfiguration().background}}">\n      <ul>\n        <span data-ng-click="alterView(\'hours\')"\n              ng-hide="type == \'DATE\'" ng-show="view != \'hours\' || type == \'HOUR\'"\n              class="hours">\n              {{gumgaDateValue.getHours() < 10 ? "0"+gumgaDateValue.getHours() : gumgaDateValue.getHours()}}\n                :\n              {{gumgaDateValue.getMinutes() < 10 ? "0"+gumgaDateValue.getMinutes() : gumgaDateValue.getMinutes()}}\n              </span><br>\n\n        <span data-ng-click="alterView(\'days\')"\n              ng-show="view == \'hours\' && (type == \'DATE\' || type == \'DATE_HOUR\') || type == \'DATE\'"\n              class="hours">{{value}}</span>\n\n        <br>\n        <li ng-show="view != \'hours\' && (type == \'DATE\' || type == \'DATE_HOUR\')" class="prev" ng-click="handlingMonths(gumgaDateValue, -1)">&#10094;</li>\n        <li ng-show="view != \'hours\' && (type == \'DATE\' || type == \'DATE_HOUR\')" class="next" ng-click="handlingMonths(gumgaDateValue, +1)">&#10095;</li>\n        <li ng-show="view != \'hours\' && (type == \'DATE\' || type == \'DATE_HOUR\')" style="text-align:center">\n          <span data-ng-click="alterView(\'months\')">{{getMonth()}}</span><br>\n          <span data-ng-click="alterView(\'months\')" style="font-size:18px">{{getYear()}}</span>\n        </li>\n\n        <div class="gumga-date-hour" ng-show="view == \'hours\'">\n            <span class="glyphicon glyphicon-chevron-up" ng-click="handlingHours(1)"></span>\n              <li>{{gumgaDateValue.getHours() < 10 ? "0"+gumgaDateValue.getHours() : gumgaDateValue.getHours()}}</li>\n            <span class="glyphicon glyphicon-chevron-down" ng-click="handlingHours(-1)"></span>\n        </div>\n        <div ng-show="view == \'hours\'" class="gumga-date-separator">\n          <span>:</span>\n        </div>\n        <div class="gumga-date-minutes" ng-show="view == \'hours\'">\n          <span class="glyphicon glyphicon-chevron-up" ng-click="handlingMinutes(1)"></span>\n            <li >{{gumgaDateValue.getMinutes() < 10 ? "0"+gumgaDateValue.getMinutes() : gumgaDateValue.getMinutes()}}</li>\n          <span class="glyphicon glyphicon-chevron-down" ng-click="handlingMinutes(-1)"></span>\n        </div>\n\n      </ul>\n    </div>\n\n    <div class="year-and-month" id="year-and-month-{{uid}}">\n      <ul class="change-month" ng-show="view == \'months\'" ng-repeat="year in years">\n        <span class="year">{{year}}</span>\n\n        <div style="width: 170px;float: right;">\n          <li data-ng-repeat="month in getGumgaMonths(true)" data-ng-click="setYearAndMonth(year, month)">\n            <span ng-class="{\'active\' : isThatMonth(year, month)}">{{month}}</span>\n          </li>\n        </div>\n\n      </ul>\n    </div>\n\n    <ul class="weekdays" ng-show="view == \'days\'">\n      <li ng-repeat="weekday in getWeekDays()">{{weekday}}</li>\n    </ul>\n    <ul class="days" ng-show="view == \'days\'">\n      <li data-ng-click="setDay(row)" data-ng-repeat="row in rows track by $index">\n          <span ng-class="{\'active\' : isToday(row)}" style="{{row.style}}">{{row.value}}</span>\n      </li>\n    </ul>\n  </div>\n\n';
 
 },{"./date.style.js":4}]},{},[1]);

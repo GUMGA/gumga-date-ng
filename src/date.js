@@ -25,6 +25,7 @@
           self.getDefaultConfiguration = () => GumgaDateService.getDefaultConfiguration();
 
           self.range = function(min, max, step) {
+              if(!self.opened) return [];
               step = step || 1;
               var input = [];
               for (var i = min; i <= max; i += step) {
@@ -90,7 +91,6 @@
               self.setNgModel(self.gumgaDateValue);
             }else{
               self.gumgaDateValue = new Date();
-              newCalendar(self.gumgaDateValue.getMonth(), self.gumgaDateValue.getFullYear());
             }
 
             if(self.type == 'HOUR'){
@@ -112,6 +112,8 @@
           self.alterView = view => {
             self.view = view;
             if(view == 'months'){
+              if(!self.years)
+                self.years = self.range(self.getMinYear(), self.getMaxYear());
               handlingScroll();
             }
           }
@@ -226,6 +228,7 @@
           self.config.open = (event) => {
               if(event) event.stopPropagation();
               self.opened = true;
+              newCalendar(self.gumgaDateValue.getMonth(), self.gumgaDateValue.getFullYear());
           }
 
           self.config.close = () => {
@@ -286,6 +289,7 @@
           })
 
           const newCalendar = (mouth, year) => {
+            if(!self.opened) return;
             let primaryDay = new Date(year, mouth, 1), count = 1;
             var possibilities = new Array(42);
 

@@ -53,7 +53,7 @@ export default `
     </div>
 
     <div class="year-and-month" id="year-and-month-{{uid}}">
-      <ul class="change-month" ng-show="view == 'months'" ng-repeat="year in range(getMinYear(), getMaxYear())">
+      <ul class="change-month" ng-show="view == 'months'" ng-repeat="year in years">
         <span class="year">{{year}}</span>
 
         <div style="width: 170px;float: right;">
