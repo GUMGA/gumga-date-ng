@@ -2,9 +2,8 @@
   'use strict';
 
   const GumgaService = () => {
-      let service = {};
 
-      service.configuration = {
+      const configuration = {
         background: '#1abc9c',
         primaryColor: '#1abc9c',
         fontColor: '#fff',
@@ -20,17 +19,27 @@
         }
       }
 
-      service.getDefaultConfiguration = () => {
-        return service.configuration;
+      const getDefaultConfiguration = () => {
+        return configuration;
       }
 
-      service.setDefaultConfiguration = config => {
-        Object.keys(config).forEach(key => service.configuration[key] = config[key]);
+      const setDefaultConfiguration = config => {
+        Object.keys(config).forEach(key => configuration[key] = config[key]);
       }
 
-      return service;
+      return {
+        getDefaultConfiguration : getDefaultConfiguration,
+        setDefaultConfiguration : setDefaultConfiguration,
+        $get : function(){
+          return {
+            getDefaultConfiguration : getDefaultConfiguration,
+            setDefaultConfiguration : setDefaultConfiguration
+          }
+        }
+      };
+
   }
 
   angular.module('gumga.date.service', [])
-         .service('GumgaDateService', GumgaService);
+         .provider('GumgaDateService', GumgaService);
 })();

@@ -61,17 +61,17 @@ export default `
     overflow-y: scroll;
   }
 
-  .gumga-date-hour > span, .gumga-date-minutes > span {
-    color: {{style.fontColor ? style.fontColor : '#fff'}} !important;
+  #gumga-date-{{uid}} .gumga-date-hour > span, #gumga-date-{{uid}} .gumga-date-minutes > span {
+    color: {{config.fontColor ? config.fontColor : getDefaultConfiguration().fontColor}} !important;
     cursor: pointer;
   }
 
-  .gumga-date-separator{
+  #gumga-date-{{uid}} .gumga-date-separator{
     float: left;
     width: 13px;
     height: 100%;
     font-size: 25px;
-    color: {{style.fontColor ? style.fontColor : '#fff'}} !important;
+    color: {{config.fontColor ? config.fontColor : getDefaultConfiguration().fontColor}} !important;
     padding-top: 35px;
   }
 
@@ -87,7 +87,7 @@ export default `
     font-size: 40px !important;
   }
 
-  .gumga-date > .month > ul .hours {
+  #gumga-date-{{uid}} > .month > ul .hours {
     width: 100%;
     position: absolute;
     left: 0;
@@ -245,7 +245,7 @@ export default `
   }
   #gumga-date-{{uid}} > .year-and-month > .change-month  li .active{
     background: {{config.primaryColor ? config.primaryColor : getDefaultConfiguration().primaryColor}} !important;
-    color: {{style.fontColor ? style.fontColor : '#fff'}} !important;
+    color: {{config.fontColor ? config.fontColor : getDefaultConfiguration().fontColor}} !important;
     padding: 5px;
     border-radius: 10px;
   }

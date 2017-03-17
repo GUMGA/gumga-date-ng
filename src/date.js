@@ -241,7 +241,7 @@
                 self.opened = true;
                 setType();
                 newCalendar(self.gumgaDateValue.getMonth(), self.gumgaDateValue.getFullYear());
-              }              
+              }
           }
 
           self.config.close = () => {
@@ -298,26 +298,23 @@
             switch (event.keyCode) {
               case 38:
                 //UP
-                // day = self.gumgaDateValue.getDate() - 7;
                 day = moment(self.gumgaDateValue).add(-7, 'days').toDate();
                 break;
               case 40:
                 //DOWN
-                // day = self.gumgaDateValue.getDate() + 7;
                 day = moment(self.gumgaDateValue).add(+7, 'days').toDate();
                 break;
               case 37:
                 //LEFT
-                // day = self.gumgaDateValue.getDate() - 1;
                 day = moment(self.gumgaDateValue).add(-1, 'days').toDate();
                 break;
               case 39:
                 //RIGHT
-                // day = self.gumgaDateValue.getDate() + 1;
                 day = moment(self.gumgaDateValue).add(+1, 'days').toDate();
                 break;
               case 13:
                 //ENTER
+                self.setNgModel(self.gumgaDateValue);
                 self.config.close();
             }
 
@@ -334,17 +331,17 @@
             switch (event.keyCode) {
               case 38:
                 //UP
-                minutes = self.gumgaDateValue.getMinutes() + 1;
+                minutes = moment(self.gumgaDateValue).add(+1, 'minutes').toDate();
                 break;
               case 40:
                 //DOWN
-                minutes = self.gumgaDateValue.getMinutes() - 1;
+                minutes = moment(self.gumgaDateValue).add(-1, 'minutes').toDate();
                 break;
             }
             $timeout(()=>{
               if(minutes == 0 || !self.opened) return;
               event.stopPropagation();
-              self.gumgaDateValue.setMinutes(minutes);
+              self.gumgaDateValue = minutes;
               self.setNgModel(self.gumgaDateValue);
             })
           }
@@ -375,10 +372,7 @@
             for(let x = primaryDay.getDay(); x < possibilities.length; x ++){
               let data = new Date(year, mouth, count);
               possibilities[x] = {value: data.getDate()}
-              possibilities[x].style = '';
-              if(data.getMonth() != mouth){
-                possibilities[x].style = 'color: #b7aaaa !important;';
-              }
+              possibilities[x].style = data.getMonth() != mouth ? 'color: #b7aaaa !important;' : '';
               possibilities[x].style += possibilities[x].value < 10 ? 'padding-left: 9.75px;padding-right: 9.75px;' : '';
               possibilities[x].mouth = data.getMonth();
               possibilities[x].year = data.getFullYear();

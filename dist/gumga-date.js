@@ -300,26 +300,23 @@
           switch (event.keyCode) {
             case 38:
               //UP
-              // day = self.gumgaDateValue.getDate() - 7;
               day = moment(self.gumgaDateValue).add(-7, 'days').toDate();
               break;
             case 40:
               //DOWN
-              // day = self.gumgaDateValue.getDate() + 7;
               day = moment(self.gumgaDateValue).add(+7, 'days').toDate();
               break;
             case 37:
               //LEFT
-              // day = self.gumgaDateValue.getDate() - 1;
               day = moment(self.gumgaDateValue).add(-1, 'days').toDate();
               break;
             case 39:
               //RIGHT
-              // day = self.gumgaDateValue.getDate() + 1;
               day = moment(self.gumgaDateValue).add(+1, 'days').toDate();
               break;
             case 13:
               //ENTER
+              self.setNgModel(self.gumgaDateValue);
               self.config.close();
           }
 
@@ -336,17 +333,17 @@
           switch (event.keyCode) {
             case 38:
               //UP
-              minutes = self.gumgaDateValue.getMinutes() + 1;
+              minutes = moment(self.gumgaDateValue).add(+1, 'minutes').toDate();
               break;
             case 40:
               //DOWN
-              minutes = self.gumgaDateValue.getMinutes() - 1;
+              minutes = moment(self.gumgaDateValue).add(-1, 'minutes').toDate();
               break;
           }
           $timeout(function () {
             if (minutes == 0 || !self.opened) return;
             event.stopPropagation();
-            self.gumgaDateValue.setMinutes(minutes);
+            self.gumgaDateValue = minutes;
             self.setNgModel(self.gumgaDateValue);
           });
         };
@@ -378,10 +375,7 @@
           for (var _x2 = primaryDay.getDay(); _x2 < possibilities.length; _x2++) {
             var data = new Date(year, mouth, count);
             possibilities[_x2] = { value: data.getDate() };
-            possibilities[_x2].style = '';
-            if (data.getMonth() != mouth) {
-              possibilities[_x2].style = 'color: #b7aaaa !important;';
-            }
+            possibilities[_x2].style = data.getMonth() != mouth ? 'color: #b7aaaa !important;' : '';
             possibilities[_x2].style += possibilities[_x2].value < 10 ? 'padding-left: 9.75px;padding-right: 9.75px;' : '';
             possibilities[_x2].mouth = data.getMonth();
             possibilities[_x2].year = data.getFullYear();
@@ -957,9 +951,8 @@
   'use strict';
 
   var GumgaService = function GumgaService() {
-    var service = {};
 
-    service.configuration = {
+    var configuration = {
       background: '#1abc9c',
       primaryColor: '#1abc9c',
       fontColor: '#fff',
@@ -975,20 +968,29 @@
       }
     };
 
-    service.getDefaultConfiguration = function () {
-      return service.configuration;
+    var getDefaultConfiguration = function getDefaultConfiguration() {
+      return configuration;
     };
 
-    service.setDefaultConfiguration = function (config) {
+    var setDefaultConfiguration = function setDefaultConfiguration(config) {
       Object.keys(config).forEach(function (key) {
-        return service.configuration[key] = config[key];
+        return configuration[key] = config[key];
       });
     };
 
-    return service;
+    return {
+      getDefaultConfiguration: getDefaultConfiguration,
+      setDefaultConfiguration: setDefaultConfiguration,
+      $get: function $get() {
+        return {
+          getDefaultConfiguration: getDefaultConfiguration,
+          setDefaultConfiguration: setDefaultConfiguration
+        };
+      }
+    };
   };
 
-  angular.module('gumga.date.service', []).service('GumgaDateService', GumgaService);
+  angular.module('gumga.date.service', []).provider('GumgaDateService', GumgaService);
 })();
 
 },{}],4:[function(require,module,exports){
@@ -997,7 +999,7 @@
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.default = "\n\n  scrollbar[orient=\"vertical\"] scrollbarbutton,\n  scrollbar[orient=\"vertical\"] slider,\n  scrollbar[orient=\"horizontal\"] scrollbarbutton,\n  scrollbar[orient=\"horizontal\"] slider{\n    display:none;\n  }\n\n  .gumga-date-input{\n    width: 100%;\n  }\n\n  .year-and-month::-webkit-scrollbar {\n      width: 10px;\n  }\n\n  .year-and-month::-webkit-scrollbar-track{\n      -webkit-box-shadow: inset 0 0 6px #f5f5f5;\n  }\n\n  .year-and-month::-webkit-scrollbar-thumb {\n    background-color: #ccc;\n    outline: 1px solid slategrey;\n  }\n\n  .gumga-date-hour::-webkit-scrollbar, .gumga-date-minutes::-webkit-scrollbar {\n    display: none;\n    width: 1px;\n  }\n\n  .gumga-date-hour::-webkit-scrollbar-track, .gumga-date-minutes::-webkit-scrollbar-track {\n    display: none;\n  }\n\n  .gumga-date-hour::-webkit-scrollbar-thumb, .gumga-date-minutes::-webkit-scrollbar-thumb {\n    display: none;\n  }\n\n  .gumga-date {\n    font-family: Verdana,sans-serif;\n    box-sizing:border-box;\n    width: 250px;\n    position: absolute;\n    z-index: 999999999;\n    display: inline-block;\n    -webkit-touch-callout: none; /* iOS Safari */\n      -webkit-user-select: none; /* Safari */\n       -khtml-user-select: none; /* Konqueror HTML */\n         -moz-user-select: none; /* Firefox */\n          -ms-user-select: none; /* Internet Explorer/Edge */\n              user-select: none;\n  }\n\n  .gumga-date-hour{\n    width: 93px;\n    float: left;\n    text-align: center;\n    height: 100px;\n    overflow: hidden;\n    overflow-y: scroll;\n  }\n\n  .gumga-date-hour > span, .gumga-date-minutes > span {\n    color: {{style.fontColor ? style.fontColor : '#fff'}} !important;\n    cursor: pointer;\n  }\n\n  .gumga-date-separator{\n    float: left;\n    width: 13px;\n    height: 100%;\n    font-size: 25px;\n    color: {{style.fontColor ? style.fontColor : '#fff'}} !important;\n    padding-top: 35px;\n  }\n\n  .gumga-date-minutes{\n    width: 93px;\n    text-align: center;\n    height: 100px;\n    overflow: hidden;\n    overflow-y: scroll;\n  }\n\n  .gumga-date-hour > li,  .gumga-date-minutes > li{\n    font-size: 40px !important;\n  }\n\n  .gumga-date > .month > ul .hours {\n    width: 100%;\n    position: absolute;\n    left: 0;\n    top: 0;\n    padding: 6px;\n    font-size: 14px;\n    cursor : pointer;\n    text-align: center;\n    color: {{style.fontColor ? style.fontColor : '#fff'}} !important;\n    background: rgba(43, 38, 38, 0.21);\n    height: 32px;\n  }\n\n  .gumga-date > .month > ul .hours:hover {\n    font-size: 15px;\n    transition: all 1s;\n  }\n\n  .gumga-date > .month {\n      padding: 25px 25px;\n      width: 100%;\n  }\n\n  .gumga-date > .month ul {\n      margin: 0;\n      list-style: none;\n      padding: 0;\n  }\n\n  .gumga-date > .month ul li {\n      color: white;\n      font-size: 20px;\n      text-transform: uppercase;\n      cursor: pointer;\n      letter-spacing: 3px;\n  }\n\n  .gumga-date > .month .prev {\n      float: left;\n      padding-top: 10px;\n      outline: none;\n      cursor: pointer;\n  }\n\n  .gumga-date > .month .next {\n      float: right;\n      padding-top: 10px;\n      cursor: pointer;\n      outline: none;\n  }\n\n  .gumga-date > .year-and-month {\n      background-color: #eee;\n      max-height: 204px;\n      text-align: center;\n      overflow-x: auto;\n      transition-property: all;\n       transition-duration: .5s;\n  }\n\n  .gumga-date > .weekdays,  .gumga-date > .year-and-month >  .change-month{\n      margin: 0;\n      padding: 10px 0;\n      background-color: #ddd;\n      padding-left: 3px;\n      list-style: none;\n  }\n\n  .gumga-date > .year-and-month > .change-month {\n    background-color: #eee;\n    max-height: 210px;\n    text-align: center;\n    overflow: auto;\n  }\n\n  .gumga-date > .year-and-month > .change-month li {\n      cursor: pointer;\n      padding: 5px;\n      width: 40px;\n      text-align: center;\n      float: left;\n      font-size: 10px;\n  }\n\n  .gumga-date > .year-and-month > .change-month > .year{\n      display: block;\n      text-align: left;\n      font-weight: 800;\n      padding-left: 15px;\n      margin-top: 27px;\n      float: left;\n      width: 60px;\n  }\n\n  .gumga-date > .weekdays li {\n      display: inline-block;\n      width: 35px;\n      color: #666;\n      text-align: center;\n  }\n\n  .gumga-date > .days {\n      padding: 10px 0;\n      background: #eee;\n      margin: 0;\n      padding-left: 3px;\n  }\n\n  .gumga-date > .days li {\n      list-style-type: none;\n      display: inline-block;\n      width: 35px;\n      text-align: center;\n      margin-bottom: 5px;\n      font-size:12px;\n      color: #777;\n      cursor: pointer;\n  }\n\n  .gumga-date > .days li .active {\n      padding: 5px;\n      color: white !important\n  }\n\n  @media screen and (max-width:720px) {\n      .gumga-date > .weekdays li, .days li {width: 13.1%;}\n  }\n\n  @media screen and (max-width: 420px) {\n      .gumga-date > .weekdays li, .days li {\n        width: 12.5%;\n      }\n      .gumga-date > .days li .active {\n        padding: 2px;\n      }\n  }\n\n  @media screen and (max-width: 290px) {\n      .gumga-date > .weekdays li, .days li {\n        width: 12.2%;\n      }\n  }\n  #gumga-date-{{uid}} > .month ul li {\n    color: {{config.fontColor ? config.fontColor : getDefaultConfiguration().fontColor}};\n  }\n  #gumga-date-{{uid}} > .days li .active{\n    background: {{config.primaryColor ? config.primaryColor : getDefaultConfiguration().primaryColor}} !important;\n    border-radius: 50%;\n  }\n  #gumga-date-{{uid}} > .days li:hover{\n    color: {{config.primaryColor ? config.primaryColor : getDefaultConfiguration().primaryColor}};\n  }\n  #gumga-date-{{uid}} > .year-and-month > .change-month  li:hover{\n    color: {{config.primaryColor ? config.primaryColor : getDefaultConfiguration().primaryColor}} !important;\n  }\n  #gumga-date-{{uid}} > .year-and-month > .change-month  li .active{\n    background: {{config.primaryColor ? config.primaryColor : getDefaultConfiguration().primaryColor}} !important;\n    color: {{style.fontColor ? style.fontColor : '#fff'}} !important;\n    padding: 5px;\n    border-radius: 10px;\n  }\n\n";
+exports.default = "\n\n  scrollbar[orient=\"vertical\"] scrollbarbutton,\n  scrollbar[orient=\"vertical\"] slider,\n  scrollbar[orient=\"horizontal\"] scrollbarbutton,\n  scrollbar[orient=\"horizontal\"] slider{\n    display:none;\n  }\n\n  .gumga-date-input{\n    width: 100%;\n  }\n\n  .year-and-month::-webkit-scrollbar {\n      width: 10px;\n  }\n\n  .year-and-month::-webkit-scrollbar-track{\n      -webkit-box-shadow: inset 0 0 6px #f5f5f5;\n  }\n\n  .year-and-month::-webkit-scrollbar-thumb {\n    background-color: #ccc;\n    outline: 1px solid slategrey;\n  }\n\n  .gumga-date-hour::-webkit-scrollbar, .gumga-date-minutes::-webkit-scrollbar {\n    display: none;\n    width: 1px;\n  }\n\n  .gumga-date-hour::-webkit-scrollbar-track, .gumga-date-minutes::-webkit-scrollbar-track {\n    display: none;\n  }\n\n  .gumga-date-hour::-webkit-scrollbar-thumb, .gumga-date-minutes::-webkit-scrollbar-thumb {\n    display: none;\n  }\n\n  .gumga-date {\n    font-family: Verdana,sans-serif;\n    box-sizing:border-box;\n    width: 250px;\n    position: absolute;\n    z-index: 999999999;\n    display: inline-block;\n    -webkit-touch-callout: none; /* iOS Safari */\n      -webkit-user-select: none; /* Safari */\n       -khtml-user-select: none; /* Konqueror HTML */\n         -moz-user-select: none; /* Firefox */\n          -ms-user-select: none; /* Internet Explorer/Edge */\n              user-select: none;\n  }\n\n  .gumga-date-hour{\n    width: 93px;\n    float: left;\n    text-align: center;\n    height: 100px;\n    overflow: hidden;\n    overflow-y: scroll;\n  }\n\n  #gumga-date-{{uid}} .gumga-date-hour > span, #gumga-date-{{uid}} .gumga-date-minutes > span {\n    color: {{config.fontColor ? config.fontColor : getDefaultConfiguration().fontColor}} !important;\n    cursor: pointer;\n  }\n\n  #gumga-date-{{uid}} .gumga-date-separator{\n    float: left;\n    width: 13px;\n    height: 100%;\n    font-size: 25px;\n    color: {{config.fontColor ? config.fontColor : getDefaultConfiguration().fontColor}} !important;\n    padding-top: 35px;\n  }\n\n  .gumga-date-minutes{\n    width: 93px;\n    text-align: center;\n    height: 100px;\n    overflow: hidden;\n    overflow-y: scroll;\n  }\n\n  .gumga-date-hour > li,  .gumga-date-minutes > li{\n    font-size: 40px !important;\n  }\n\n  #gumga-date-{{uid}} > .month > ul .hours {\n    width: 100%;\n    position: absolute;\n    left: 0;\n    top: 0;\n    padding: 6px;\n    font-size: 14px;\n    cursor : pointer;\n    text-align: center;\n    color: {{style.fontColor ? style.fontColor : '#fff'}} !important;\n    background: rgba(43, 38, 38, 0.21);\n    height: 32px;\n  }\n\n  .gumga-date > .month > ul .hours:hover {\n    font-size: 15px;\n    transition: all 1s;\n  }\n\n  .gumga-date > .month {\n      padding: 25px 25px;\n      width: 100%;\n  }\n\n  .gumga-date > .month ul {\n      margin: 0;\n      list-style: none;\n      padding: 0;\n  }\n\n  .gumga-date > .month ul li {\n      color: white;\n      font-size: 20px;\n      text-transform: uppercase;\n      cursor: pointer;\n      letter-spacing: 3px;\n  }\n\n  .gumga-date > .month .prev {\n      float: left;\n      padding-top: 10px;\n      outline: none;\n      cursor: pointer;\n  }\n\n  .gumga-date > .month .next {\n      float: right;\n      padding-top: 10px;\n      cursor: pointer;\n      outline: none;\n  }\n\n  .gumga-date > .year-and-month {\n      background-color: #eee;\n      max-height: 204px;\n      text-align: center;\n      overflow-x: auto;\n      transition-property: all;\n       transition-duration: .5s;\n  }\n\n  .gumga-date > .weekdays,  .gumga-date > .year-and-month >  .change-month{\n      margin: 0;\n      padding: 10px 0;\n      background-color: #ddd;\n      padding-left: 3px;\n      list-style: none;\n  }\n\n  .gumga-date > .year-and-month > .change-month {\n    background-color: #eee;\n    max-height: 210px;\n    text-align: center;\n    overflow: auto;\n  }\n\n  .gumga-date > .year-and-month > .change-month li {\n      cursor: pointer;\n      padding: 5px;\n      width: 40px;\n      text-align: center;\n      float: left;\n      font-size: 10px;\n  }\n\n  .gumga-date > .year-and-month > .change-month > .year{\n      display: block;\n      text-align: left;\n      font-weight: 800;\n      padding-left: 15px;\n      margin-top: 27px;\n      float: left;\n      width: 60px;\n  }\n\n  .gumga-date > .weekdays li {\n      display: inline-block;\n      width: 35px;\n      color: #666;\n      text-align: center;\n  }\n\n  .gumga-date > .days {\n      padding: 10px 0;\n      background: #eee;\n      margin: 0;\n      padding-left: 3px;\n  }\n\n  .gumga-date > .days li {\n      list-style-type: none;\n      display: inline-block;\n      width: 35px;\n      text-align: center;\n      margin-bottom: 5px;\n      font-size:12px;\n      color: #777;\n      cursor: pointer;\n  }\n\n  .gumga-date > .days li .active {\n      padding: 5px;\n      color: white !important\n  }\n\n  @media screen and (max-width:720px) {\n      .gumga-date > .weekdays li, .days li {width: 13.1%;}\n  }\n\n  @media screen and (max-width: 420px) {\n      .gumga-date > .weekdays li, .days li {\n        width: 12.5%;\n      }\n      .gumga-date > .days li .active {\n        padding: 2px;\n      }\n  }\n\n  @media screen and (max-width: 290px) {\n      .gumga-date > .weekdays li, .days li {\n        width: 12.2%;\n      }\n  }\n  #gumga-date-{{uid}} > .month ul li {\n    color: {{config.fontColor ? config.fontColor : getDefaultConfiguration().fontColor}};\n  }\n  #gumga-date-{{uid}} > .days li .active{\n    background: {{config.primaryColor ? config.primaryColor : getDefaultConfiguration().primaryColor}} !important;\n    border-radius: 50%;\n  }\n  #gumga-date-{{uid}} > .days li:hover{\n    color: {{config.primaryColor ? config.primaryColor : getDefaultConfiguration().primaryColor}};\n  }\n  #gumga-date-{{uid}} > .year-and-month > .change-month  li:hover{\n    color: {{config.primaryColor ? config.primaryColor : getDefaultConfiguration().primaryColor}} !important;\n  }\n  #gumga-date-{{uid}} > .year-and-month > .change-month  li .active{\n    background: {{config.primaryColor ? config.primaryColor : getDefaultConfiguration().primaryColor}} !important;\n    color: {{config.fontColor ? config.fontColor : getDefaultConfiguration().fontColor}} !important;\n    padding: 5px;\n    border-radius: 10px;\n  }\n\n";
 
 },{}],5:[function(require,module,exports){
 'use strict';
