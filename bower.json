@@ -1,7 +1,7 @@
 {
   "name": "gumga-date-ng",
   "description": "Gumga Date",
-  "version" : "1.1.1",
+  "version" : "1.1.2",
   "main": "./src/date.js",
   "authors": [
     "Gumga Tecnologia da Informação S/A"

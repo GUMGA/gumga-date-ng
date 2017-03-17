@@ -8,8 +8,13 @@
       })
       .controller('ctrl', function($scope) {
 
+        $scope.nascimento = new Date();
+
         $scope.teste = {
           position: 'BOTTOM_LEFT',
+          primaryColor: 'red',
+          fontColor: '#fff',
+          background: 'red',
           format: 'dd/MM/yyyy',
           showCalendar: true,
         }

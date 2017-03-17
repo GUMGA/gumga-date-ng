@@ -278,6 +278,11 @@
             newCalendar(date.getMonth(), date.getFullYear());
             self.value = formatDate(angular.copy(date), self.inputFormat);
           }
+          if (!value) {
+            self.gumgaDateValue = new Date();
+            newCalendar(self.gumgaDateValue.getMonth(), self.gumgaDateValue.getFullYear());
+            self.value = null;
+          }
         }, true);
 
         self.$watch('value', function (value) {
