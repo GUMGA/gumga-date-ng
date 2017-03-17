@@ -141,7 +141,7 @@ export default `
 
   .gumga-date > .year-and-month {
       background-color: #eee;
-      max-height: 210px;
+      max-height: 204px;
       text-align: center;
       overflow-x: auto;
       transition-property: all;

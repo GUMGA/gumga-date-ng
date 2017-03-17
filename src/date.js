@@ -58,8 +58,7 @@
             return $filter('date')(date, format);
           }
 
-          const init = () => {
-            self.inputFormat = self.config.format ? self.config.format : self.getDefaultConfiguration().format;
+          const setType = () => {
             self.type =
             self.inputFormat.toLowerCase().indexOf('hh:mm') != -1
             && self.inputFormat.toLowerCase().indexOf('dd') == -1 ? 'HOUR' : self.type;
@@ -69,6 +68,18 @@
 
             self.type = self.inputFormat.toLowerCase().indexOf('hh:mm') == -1
             && self.inputFormat.toLowerCase().indexOf('dd') != -1 ? 'DATE' : self.type;
+
+            if(self.type == 'HOUR'){
+              self.alterView('hours');
+            }else{
+              self.alterView('days');
+            }
+
+          }
+
+          const init = () => {
+            self.inputFormat = self.config.format ? self.config.format : self.getDefaultConfiguration().format;
+            setType();
 
             self.mask = self.inputFormat.replace(/[a-zA-Z\d]/g, '9');
 
@@ -91,12 +102,6 @@
               self.setNgModel(self.gumgaDateValue);
             }else{
               self.gumgaDateValue = new Date();
-            }
-
-            if(self.type == 'HOUR'){
-              self.alterView('hours');
-            }else{
-              self.alterView('days');
             }
 
           }
@@ -163,6 +168,7 @@
               if(value && date != 'Invalid Date' && (date.getFullYear() >= minYear && date.getFullYear() <= maxYear)){
                 self.gumgaDateValue = date;
                 self.setNgModel(self.gumgaDateValue)
+                if(self.config.change) self.config.change(self.ngModel);
               }else{
                 self.value = null;
               }
@@ -192,6 +198,10 @@
             update.setSeconds(self.gumgaDateValue.getSeconds());
             self.gumgaDateValue = update;
             self.setNgModel(self.gumgaDateValue)
+            if(self.config.change) self.config.change(self.ngModel);
+            if(self.config.hasOwnProperty('closeOnChange') ? self.config.closeOnChange : self.getDefaultConfiguration().closeOnChange){
+              self.config.close();
+            }
           }
 
           self.setYearAndMonth = (year, month) => {
@@ -227,8 +237,11 @@
 
           self.config.open = (event) => {
               if(event) event.stopPropagation();
-              self.opened = true;
-              newCalendar(self.gumgaDateValue.getMonth(), self.gumgaDateValue.getFullYear());
+              if(self.config.hasOwnProperty('showCalendar') ? self.config.showCalendar : self.getDefaultConfiguration().showCalendar){
+                self.opened = true;
+                setType();
+                newCalendar(self.gumgaDateValue.getMonth(), self.gumgaDateValue.getFullYear());
+              }              
           }
 
           self.config.close = () => {
@@ -273,19 +286,81 @@
             self.ngModel = moment.tz(value, timeZone).format();
             newCalendar(value.getMonth(), value.getFullYear());
             self.value = formatDate(angular.copy(value), self.inputFormat);
-            if(self.config.change) self.config.change(self.ngModel);
           }
 
           elm.bind('click', (event) => {
             event.stopPropagation();
           })
 
-          let listener = document.addEventListener('click', event => {
+
+          const incrementDay = (event) => {
+            let day = undefined;
+            switch (event.keyCode) {
+              case 38:
+                //UP
+                // day = self.gumgaDateValue.getDate() - 7;
+                day = moment(self.gumgaDateValue).add(-7, 'days').toDate();
+                break;
+              case 40:
+                //DOWN
+                // day = self.gumgaDateValue.getDate() + 7;
+                day = moment(self.gumgaDateValue).add(+7, 'days').toDate();
+                break;
+              case 37:
+                //LEFT
+                // day = self.gumgaDateValue.getDate() - 1;
+                day = moment(self.gumgaDateValue).add(-1, 'days').toDate();
+                break;
+              case 39:
+                //RIGHT
+                // day = self.gumgaDateValue.getDate() + 1;
+                day = moment(self.gumgaDateValue).add(+1, 'days').toDate();
+                break;
+              case 13:
+                //ENTER
+                self.config.close();
+            }
+
+            $timeout(() => {
+                if(!self.opened || !day) return;
+                event.stopPropagation();
+                self.gumgaDateValue = day
+                self.setNgModel(self.gumgaDateValue);
+            })
+          }
+
+          const incrementMinutes = (event) => {
+            let minutes = 0;
+            switch (event.keyCode) {
+              case 38:
+                //UP
+                minutes = self.gumgaDateValue.getMinutes() + 1;
+                break;
+              case 40:
+                //DOWN
+                minutes = self.gumgaDateValue.getMinutes() - 1;
+                break;
+            }
+            $timeout(()=>{
+              if(minutes == 0 || !self.opened) return;
+              event.stopPropagation();
+              self.gumgaDateValue.setMinutes(minutes);
+              self.setNgModel(self.gumgaDateValue);
+            })
+          }
+
+          let listenerClick = document.addEventListener('click', event => {
             $timeout(self.config.close);
           })
 
+          let listenerKey = document.addEventListener('keyup', event => {
+            self.opened && self.view == 'days' ? incrementDay(event) : angular.noop();
+            self.opened && self.view == 'hours' ? incrementMinutes(event) : angular.noop();
+          })
+
           self.$on('$destroy', () => {
-            document.removeEventListener('click', listener);
+            document.removeEventListener('click', listenerClick);
+            document.removeEventListener('keyup', listenerKey);
           })
 
           const newCalendar = (mouth, year) => {
@@ -300,9 +375,11 @@
             for(let x = primaryDay.getDay(); x < possibilities.length; x ++){
               let data = new Date(year, mouth, count);
               possibilities[x] = {value: data.getDate()}
+              possibilities[x].style = '';
               if(data.getMonth() != mouth){
                 possibilities[x].style = 'color: #b7aaaa !important;';
               }
+              possibilities[x].style += possibilities[x].value < 10 ? 'padding-left: 9.75px;padding-right: 9.75px;' : '';
               possibilities[x].mouth = data.getMonth();
               possibilities[x].year = data.getFullYear();
               count++;
@@ -318,6 +395,48 @@
                 }
             }
             self.rows = possibilities;
+          }
+
+          self.getPosition = () => {
+            let position = self.config.position ? self.config.position : self.getDefaultConfiguration().position;
+            switch (position.toUpperCase()) {
+              case 'LEFT_BOTTOM':
+                  return 'top: 25px;left: -235px;';
+                break;
+              case 'LEFT_TOP':
+                if(self.view == 'days' || self.view == 'months')
+                  return 'top: -290px;left: -235px;';
+                if(self.view == 'hours')
+                  return 'top: -130px;left: -235px;';
+                break;
+              case 'BOTTOM_LEFT':
+                  return 'left: 15px;';
+                break;
+              case 'BOTTOM_RIGHT':
+                  return 'right: 15px;';
+                break;
+              case 'RIGHT_BOTTOM':
+                  return 'right: -235px;';
+                break;
+              case 'RIGHT_TOP':
+                if(self.view == 'days' || self.view == 'months')
+                  return 'top: -290px;right: -235px;';
+                if(self.view == 'hours')
+                  return 'top: -130px;right: -235px;';
+                break;
+              case 'TOP_LEFT':
+                if(self.view == 'days' || self.view == 'months')
+                  return 'top: -325px;left: 15px;';
+                if(self.view == 'hours')
+                  return 'top: -165px; left: 15px;';
+                break;
+              case 'TOP_RIGHT':
+                if(self.view == 'days' || self.view == 'months')
+                  return 'top: -325px;right: 15px;';
+                if(self.view == 'hours')
+                  return 'top: -165px; right: 15px;';
+                break;
+            }
           }
 
 

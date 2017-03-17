@@ -62,13 +62,23 @@
           return $filter('date')(date, format);
         };
 
-        var init = function init() {
-          self.inputFormat = self.config.format ? self.config.format : self.getDefaultConfiguration().format;
+        var setType = function setType() {
           self.type = self.inputFormat.toLowerCase().indexOf('hh:mm') != -1 && self.inputFormat.toLowerCase().indexOf('dd') == -1 ? 'HOUR' : self.type;
 
           self.type = self.inputFormat.toLowerCase().indexOf('hh:mm') != -1 && self.inputFormat.toLowerCase().indexOf('dd') != -1 ? 'DATE_HOUR' : self.type;
 
           self.type = self.inputFormat.toLowerCase().indexOf('hh:mm') == -1 && self.inputFormat.toLowerCase().indexOf('dd') != -1 ? 'DATE' : self.type;
+
+          if (self.type == 'HOUR') {
+            self.alterView('hours');
+          } else {
+            self.alterView('days');
+          }
+        };
+
+        var init = function init() {
+          self.inputFormat = self.config.format ? self.config.format : self.getDefaultConfiguration().format;
+          setType();
 
           self.mask = self.inputFormat.replace(/[a-zA-Z\d]/g, '9');
 
@@ -91,12 +101,6 @@
             self.setNgModel(self.gumgaDateValue);
           } else {
             self.gumgaDateValue = new Date();
-          }
-
-          if (self.type == 'HOUR') {
-            self.alterView('hours');
-          } else {
-            self.alterView('days');
           }
         };
 
@@ -165,6 +169,7 @@
           if (value && date != 'Invalid Date' && date.getFullYear() >= minYear && date.getFullYear() <= maxYear) {
             self.gumgaDateValue = date;
             self.setNgModel(self.gumgaDateValue);
+            if (self.config.change) self.config.change(self.ngModel);
           } else {
             self.value = null;
           }
@@ -194,6 +199,10 @@
           update.setSeconds(self.gumgaDateValue.getSeconds());
           self.gumgaDateValue = update;
           self.setNgModel(self.gumgaDateValue);
+          if (self.config.change) self.config.change(self.ngModel);
+          if (self.config.hasOwnProperty('closeOnChange') ? self.config.closeOnChange : self.getDefaultConfiguration().closeOnChange) {
+            self.config.close();
+          }
         };
 
         self.setYearAndMonth = function (year, month) {
@@ -229,8 +238,11 @@
 
         self.config.open = function (event) {
           if (event) event.stopPropagation();
-          self.opened = true;
-          newCalendar(self.gumgaDateValue.getMonth(), self.gumgaDateValue.getFullYear());
+          if (self.config.hasOwnProperty('showCalendar') ? self.config.showCalendar : self.getDefaultConfiguration().showCalendar) {
+            self.opened = true;
+            setType();
+            newCalendar(self.gumgaDateValue.getMonth(), self.gumgaDateValue.getFullYear());
+          }
         };
 
         self.config.close = function () {
@@ -277,19 +289,80 @@
           self.ngModel = moment.tz(value, timeZone).format();
           newCalendar(value.getMonth(), value.getFullYear());
           self.value = formatDate(angular.copy(value), self.inputFormat);
-          if (self.config.change) self.config.change(self.ngModel);
         };
 
         elm.bind('click', function (event) {
           event.stopPropagation();
         });
 
-        var listener = document.addEventListener('click', function (event) {
+        var incrementDay = function incrementDay(event) {
+          var day = undefined;
+          switch (event.keyCode) {
+            case 38:
+              //UP
+              // day = self.gumgaDateValue.getDate() - 7;
+              day = moment(self.gumgaDateValue).add(-7, 'days').toDate();
+              break;
+            case 40:
+              //DOWN
+              // day = self.gumgaDateValue.getDate() + 7;
+              day = moment(self.gumgaDateValue).add(+7, 'days').toDate();
+              break;
+            case 37:
+              //LEFT
+              // day = self.gumgaDateValue.getDate() - 1;
+              day = moment(self.gumgaDateValue).add(-1, 'days').toDate();
+              break;
+            case 39:
+              //RIGHT
+              // day = self.gumgaDateValue.getDate() + 1;
+              day = moment(self.gumgaDateValue).add(+1, 'days').toDate();
+              break;
+            case 13:
+              //ENTER
+              self.config.close();
+          }
+
+          $timeout(function () {
+            if (!self.opened || !day) return;
+            event.stopPropagation();
+            self.gumgaDateValue = day;
+            self.setNgModel(self.gumgaDateValue);
+          });
+        };
+
+        var incrementMinutes = function incrementMinutes(event) {
+          var minutes = 0;
+          switch (event.keyCode) {
+            case 38:
+              //UP
+              minutes = self.gumgaDateValue.getMinutes() + 1;
+              break;
+            case 40:
+              //DOWN
+              minutes = self.gumgaDateValue.getMinutes() - 1;
+              break;
+          }
+          $timeout(function () {
+            if (minutes == 0 || !self.opened) return;
+            event.stopPropagation();
+            self.gumgaDateValue.setMinutes(minutes);
+            self.setNgModel(self.gumgaDateValue);
+          });
+        };
+
+        var listenerClick = document.addEventListener('click', function (event) {
           $timeout(self.config.close);
         });
 
+        var listenerKey = document.addEventListener('keyup', function (event) {
+          self.opened && self.view == 'days' ? incrementDay(event) : angular.noop();
+          self.opened && self.view == 'hours' ? incrementMinutes(event) : angular.noop();
+        });
+
         self.$on('$destroy', function () {
-          document.removeEventListener('click', listener);
+          document.removeEventListener('click', listenerClick);
+          document.removeEventListener('keyup', listenerKey);
         });
 
         var newCalendar = function newCalendar(mouth, year) {
@@ -305,9 +378,11 @@
           for (var _x2 = primaryDay.getDay(); _x2 < possibilities.length; _x2++) {
             var data = new Date(year, mouth, count);
             possibilities[_x2] = { value: data.getDate() };
+            possibilities[_x2].style = '';
             if (data.getMonth() != mouth) {
               possibilities[_x2].style = 'color: #b7aaaa !important;';
             }
+            possibilities[_x2].style += possibilities[_x2].value < 10 ? 'padding-left: 9.75px;padding-right: 9.75px;' : '';
             possibilities[_x2].mouth = data.getMonth();
             possibilities[_x2].year = data.getFullYear();
             count++;
@@ -323,6 +398,40 @@
             };
           }
           self.rows = possibilities;
+        };
+
+        self.getPosition = function () {
+          var position = self.config.position ? self.config.position : self.getDefaultConfiguration().position;
+          switch (position.toUpperCase()) {
+            case 'LEFT_BOTTOM':
+              return 'top: 25px;left: -235px;';
+              break;
+            case 'LEFT_TOP':
+              if (self.view == 'days' || self.view == 'months') return 'top: -290px;left: -235px;';
+              if (self.view == 'hours') return 'top: -130px;left: -235px;';
+              break;
+            case 'BOTTOM_LEFT':
+              return 'left: 15px;';
+              break;
+            case 'BOTTOM_RIGHT':
+              return 'right: 15px;';
+              break;
+            case 'RIGHT_BOTTOM':
+              return 'right: -235px;';
+              break;
+            case 'RIGHT_TOP':
+              if (self.view == 'days' || self.view == 'months') return 'top: -290px;right: -235px;';
+              if (self.view == 'hours') return 'top: -130px;right: -235px;';
+              break;
+            case 'TOP_LEFT':
+              if (self.view == 'days' || self.view == 'months') return 'top: -325px;left: 15px;';
+              if (self.view == 'hours') return 'top: -165px; left: 15px;';
+              break;
+            case 'TOP_RIGHT':
+              if (self.view == 'days' || self.view == 'months') return 'top: -325px;right: 15px;';
+              if (self.view == 'hours') return 'top: -165px; right: 15px;';
+              break;
+          }
         };
       }
     };
@@ -858,6 +967,9 @@
       minYear: 1905,
       timeZone: "America/Sao_Paulo",
       maxYear: 2050,
+      closeOnChange: false,
+      showCalendar: true,
+      position: 'BOTTOM_LEFT',
       inputProperties: {
         class: 'form-control'
       }
@@ -885,7 +997,7 @@
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.default = "\n\n  scrollbar[orient=\"vertical\"] scrollbarbutton,\n  scrollbar[orient=\"vertical\"] slider,\n  scrollbar[orient=\"horizontal\"] scrollbarbutton,\n  scrollbar[orient=\"horizontal\"] slider{\n    display:none;\n  }\n\n  .gumga-date-input{\n    width: 100%;\n  }\n\n  .year-and-month::-webkit-scrollbar {\n      width: 10px;\n  }\n\n  .year-and-month::-webkit-scrollbar-track{\n      -webkit-box-shadow: inset 0 0 6px #f5f5f5;\n  }\n\n  .year-and-month::-webkit-scrollbar-thumb {\n    background-color: #ccc;\n    outline: 1px solid slategrey;\n  }\n\n  .gumga-date-hour::-webkit-scrollbar, .gumga-date-minutes::-webkit-scrollbar {\n    display: none;\n    width: 1px;\n  }\n\n  .gumga-date-hour::-webkit-scrollbar-track, .gumga-date-minutes::-webkit-scrollbar-track {\n    display: none;\n  }\n\n  .gumga-date-hour::-webkit-scrollbar-thumb, .gumga-date-minutes::-webkit-scrollbar-thumb {\n    display: none;\n  }\n\n  .gumga-date {\n    font-family: Verdana,sans-serif;\n    box-sizing:border-box;\n    width: 250px;\n    position: absolute;\n    z-index: 999999999;\n    display: inline-block;\n    -webkit-touch-callout: none; /* iOS Safari */\n      -webkit-user-select: none; /* Safari */\n       -khtml-user-select: none; /* Konqueror HTML */\n         -moz-user-select: none; /* Firefox */\n          -ms-user-select: none; /* Internet Explorer/Edge */\n              user-select: none;\n  }\n\n  .gumga-date-hour{\n    width: 93px;\n    float: left;\n    text-align: center;\n    height: 100px;\n    overflow: hidden;\n    overflow-y: scroll;\n  }\n\n  .gumga-date-hour > span, .gumga-date-minutes > span {\n    color: {{style.fontColor ? style.fontColor : '#fff'}} !important;\n    cursor: pointer;\n  }\n\n  .gumga-date-separator{\n    float: left;\n    width: 13px;\n    height: 100%;\n    font-size: 25px;\n    color: {{style.fontColor ? style.fontColor : '#fff'}} !important;\n    padding-top: 35px;\n  }\n\n  .gumga-date-minutes{\n    width: 93px;\n    text-align: center;\n    height: 100px;\n    overflow: hidden;\n    overflow-y: scroll;\n  }\n\n  .gumga-date-hour > li,  .gumga-date-minutes > li{\n    font-size: 40px !important;\n  }\n\n  .gumga-date > .month > ul .hours {\n    width: 100%;\n    position: absolute;\n    left: 0;\n    top: 0;\n    padding: 6px;\n    font-size: 14px;\n    cursor : pointer;\n    text-align: center;\n    color: {{style.fontColor ? style.fontColor : '#fff'}} !important;\n    background: rgba(43, 38, 38, 0.21);\n    height: 32px;\n  }\n\n  .gumga-date > .month > ul .hours:hover {\n    font-size: 15px;\n    transition: all 1s;\n  }\n\n  .gumga-date > .month {\n      padding: 25px 25px;\n      width: 100%;\n  }\n\n  .gumga-date > .month ul {\n      margin: 0;\n      list-style: none;\n      padding: 0;\n  }\n\n  .gumga-date > .month ul li {\n      color: white;\n      font-size: 20px;\n      text-transform: uppercase;\n      cursor: pointer;\n      letter-spacing: 3px;\n  }\n\n  .gumga-date > .month .prev {\n      float: left;\n      padding-top: 10px;\n      outline: none;\n      cursor: pointer;\n  }\n\n  .gumga-date > .month .next {\n      float: right;\n      padding-top: 10px;\n      cursor: pointer;\n      outline: none;\n  }\n\n  .gumga-date > .year-and-month {\n      background-color: #eee;\n      max-height: 210px;\n      text-align: center;\n      overflow-x: auto;\n      transition-property: all;\n       transition-duration: .5s;\n  }\n\n  .gumga-date > .weekdays,  .gumga-date > .year-and-month >  .change-month{\n      margin: 0;\n      padding: 10px 0;\n      background-color: #ddd;\n      padding-left: 3px;\n      list-style: none;\n  }\n\n  .gumga-date > .year-and-month > .change-month {\n    background-color: #eee;\n    max-height: 210px;\n    text-align: center;\n    overflow: auto;\n  }\n\n  .gumga-date > .year-and-month > .change-month li {\n      cursor: pointer;\n      padding: 5px;\n      width: 40px;\n      text-align: center;\n      float: left;\n      font-size: 10px;\n  }\n\n  .gumga-date > .year-and-month > .change-month > .year{\n      display: block;\n      text-align: left;\n      font-weight: 800;\n      padding-left: 15px;\n      margin-top: 27px;\n      float: left;\n      width: 60px;\n  }\n\n  .gumga-date > .weekdays li {\n      display: inline-block;\n      width: 35px;\n      color: #666;\n      text-align: center;\n  }\n\n  .gumga-date > .days {\n      padding: 10px 0;\n      background: #eee;\n      margin: 0;\n      padding-left: 3px;\n  }\n\n  .gumga-date > .days li {\n      list-style-type: none;\n      display: inline-block;\n      width: 35px;\n      text-align: center;\n      margin-bottom: 5px;\n      font-size:12px;\n      color: #777;\n      cursor: pointer;\n  }\n\n  .gumga-date > .days li .active {\n      padding: 5px;\n      color: white !important\n  }\n\n  @media screen and (max-width:720px) {\n      .gumga-date > .weekdays li, .days li {width: 13.1%;}\n  }\n\n  @media screen and (max-width: 420px) {\n      .gumga-date > .weekdays li, .days li {\n        width: 12.5%;\n      }\n      .gumga-date > .days li .active {\n        padding: 2px;\n      }\n  }\n\n  @media screen and (max-width: 290px) {\n      .gumga-date > .weekdays li, .days li {\n        width: 12.2%;\n      }\n  }\n  #gumga-date-{{uid}} > .month ul li {\n    color: {{config.fontColor ? config.fontColor : getDefaultConfiguration().fontColor}};\n  }\n  #gumga-date-{{uid}} > .days li .active{\n    background: {{config.primaryColor ? config.primaryColor : getDefaultConfiguration().primaryColor}} !important;\n    border-radius: 50%;\n  }\n  #gumga-date-{{uid}} > .days li:hover{\n    color: {{config.primaryColor ? config.primaryColor : getDefaultConfiguration().primaryColor}};\n  }\n  #gumga-date-{{uid}} > .year-and-month > .change-month  li:hover{\n    color: {{config.primaryColor ? config.primaryColor : getDefaultConfiguration().primaryColor}} !important;\n  }\n  #gumga-date-{{uid}} > .year-and-month > .change-month  li .active{\n    background: {{config.primaryColor ? config.primaryColor : getDefaultConfiguration().primaryColor}} !important;\n    color: {{style.fontColor ? style.fontColor : '#fff'}} !important;\n    padding: 5px;\n    border-radius: 10px;\n  }\n\n";
+exports.default = "\n\n  scrollbar[orient=\"vertical\"] scrollbarbutton,\n  scrollbar[orient=\"vertical\"] slider,\n  scrollbar[orient=\"horizontal\"] scrollbarbutton,\n  scrollbar[orient=\"horizontal\"] slider{\n    display:none;\n  }\n\n  .gumga-date-input{\n    width: 100%;\n  }\n\n  .year-and-month::-webkit-scrollbar {\n      width: 10px;\n  }\n\n  .year-and-month::-webkit-scrollbar-track{\n      -webkit-box-shadow: inset 0 0 6px #f5f5f5;\n  }\n\n  .year-and-month::-webkit-scrollbar-thumb {\n    background-color: #ccc;\n    outline: 1px solid slategrey;\n  }\n\n  .gumga-date-hour::-webkit-scrollbar, .gumga-date-minutes::-webkit-scrollbar {\n    display: none;\n    width: 1px;\n  }\n\n  .gumga-date-hour::-webkit-scrollbar-track, .gumga-date-minutes::-webkit-scrollbar-track {\n    display: none;\n  }\n\n  .gumga-date-hour::-webkit-scrollbar-thumb, .gumga-date-minutes::-webkit-scrollbar-thumb {\n    display: none;\n  }\n\n  .gumga-date {\n    font-family: Verdana,sans-serif;\n    box-sizing:border-box;\n    width: 250px;\n    position: absolute;\n    z-index: 999999999;\n    display: inline-block;\n    -webkit-touch-callout: none; /* iOS Safari */\n      -webkit-user-select: none; /* Safari */\n       -khtml-user-select: none; /* Konqueror HTML */\n         -moz-user-select: none; /* Firefox */\n          -ms-user-select: none; /* Internet Explorer/Edge */\n              user-select: none;\n  }\n\n  .gumga-date-hour{\n    width: 93px;\n    float: left;\n    text-align: center;\n    height: 100px;\n    overflow: hidden;\n    overflow-y: scroll;\n  }\n\n  .gumga-date-hour > span, .gumga-date-minutes > span {\n    color: {{style.fontColor ? style.fontColor : '#fff'}} !important;\n    cursor: pointer;\n  }\n\n  .gumga-date-separator{\n    float: left;\n    width: 13px;\n    height: 100%;\n    font-size: 25px;\n    color: {{style.fontColor ? style.fontColor : '#fff'}} !important;\n    padding-top: 35px;\n  }\n\n  .gumga-date-minutes{\n    width: 93px;\n    text-align: center;\n    height: 100px;\n    overflow: hidden;\n    overflow-y: scroll;\n  }\n\n  .gumga-date-hour > li,  .gumga-date-minutes > li{\n    font-size: 40px !important;\n  }\n\n  .gumga-date > .month > ul .hours {\n    width: 100%;\n    position: absolute;\n    left: 0;\n    top: 0;\n    padding: 6px;\n    font-size: 14px;\n    cursor : pointer;\n    text-align: center;\n    color: {{style.fontColor ? style.fontColor : '#fff'}} !important;\n    background: rgba(43, 38, 38, 0.21);\n    height: 32px;\n  }\n\n  .gumga-date > .month > ul .hours:hover {\n    font-size: 15px;\n    transition: all 1s;\n  }\n\n  .gumga-date > .month {\n      padding: 25px 25px;\n      width: 100%;\n  }\n\n  .gumga-date > .month ul {\n      margin: 0;\n      list-style: none;\n      padding: 0;\n  }\n\n  .gumga-date > .month ul li {\n      color: white;\n      font-size: 20px;\n      text-transform: uppercase;\n      cursor: pointer;\n      letter-spacing: 3px;\n  }\n\n  .gumga-date > .month .prev {\n      float: left;\n      padding-top: 10px;\n      outline: none;\n      cursor: pointer;\n  }\n\n  .gumga-date > .month .next {\n      float: right;\n      padding-top: 10px;\n      cursor: pointer;\n      outline: none;\n  }\n\n  .gumga-date > .year-and-month {\n      background-color: #eee;\n      max-height: 204px;\n      text-align: center;\n      overflow-x: auto;\n      transition-property: all;\n       transition-duration: .5s;\n  }\n\n  .gumga-date > .weekdays,  .gumga-date > .year-and-month >  .change-month{\n      margin: 0;\n      padding: 10px 0;\n      background-color: #ddd;\n      padding-left: 3px;\n      list-style: none;\n  }\n\n  .gumga-date > .year-and-month > .change-month {\n    background-color: #eee;\n    max-height: 210px;\n    text-align: center;\n    overflow: auto;\n  }\n\n  .gumga-date > .year-and-month > .change-month li {\n      cursor: pointer;\n      padding: 5px;\n      width: 40px;\n      text-align: center;\n      float: left;\n      font-size: 10px;\n  }\n\n  .gumga-date > .year-and-month > .change-month > .year{\n      display: block;\n      text-align: left;\n      font-weight: 800;\n      padding-left: 15px;\n      margin-top: 27px;\n      float: left;\n      width: 60px;\n  }\n\n  .gumga-date > .weekdays li {\n      display: inline-block;\n      width: 35px;\n      color: #666;\n      text-align: center;\n  }\n\n  .gumga-date > .days {\n      padding: 10px 0;\n      background: #eee;\n      margin: 0;\n      padding-left: 3px;\n  }\n\n  .gumga-date > .days li {\n      list-style-type: none;\n      display: inline-block;\n      width: 35px;\n      text-align: center;\n      margin-bottom: 5px;\n      font-size:12px;\n      color: #777;\n      cursor: pointer;\n  }\n\n  .gumga-date > .days li .active {\n      padding: 5px;\n      color: white !important\n  }\n\n  @media screen and (max-width:720px) {\n      .gumga-date > .weekdays li, .days li {width: 13.1%;}\n  }\n\n  @media screen and (max-width: 420px) {\n      .gumga-date > .weekdays li, .days li {\n        width: 12.5%;\n      }\n      .gumga-date > .days li .active {\n        padding: 2px;\n      }\n  }\n\n  @media screen and (max-width: 290px) {\n      .gumga-date > .weekdays li, .days li {\n        width: 12.2%;\n      }\n  }\n  #gumga-date-{{uid}} > .month ul li {\n    color: {{config.fontColor ? config.fontColor : getDefaultConfiguration().fontColor}};\n  }\n  #gumga-date-{{uid}} > .days li .active{\n    background: {{config.primaryColor ? config.primaryColor : getDefaultConfiguration().primaryColor}} !important;\n    border-radius: 50%;\n  }\n  #gumga-date-{{uid}} > .days li:hover{\n    color: {{config.primaryColor ? config.primaryColor : getDefaultConfiguration().primaryColor}};\n  }\n  #gumga-date-{{uid}} > .year-and-month > .change-month  li:hover{\n    color: {{config.primaryColor ? config.primaryColor : getDefaultConfiguration().primaryColor}} !important;\n  }\n  #gumga-date-{{uid}} > .year-and-month > .change-month  li .active{\n    background: {{config.primaryColor ? config.primaryColor : getDefaultConfiguration().primaryColor}} !important;\n    color: {{style.fontColor ? style.fontColor : '#fff'}} !important;\n    padding: 5px;\n    border-radius: 10px;\n  }\n\n";
 
 },{}],5:[function(require,module,exports){
 'use strict';
@@ -900,6 +1012,6 @@ var _dateStyle2 = _interopRequireDefault(_dateStyle);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-exports.default = '\n  <style>' + _dateStyle2.default + '</style>\n\n  <input  ng-focus="config.open()"\n          ng-model="value"\n          gumga-date-mask="{{mask}}"\n          ng-disabled="ngDisabled"\n          class="gumga-date-input {{inputProperties.class}}"\n          placeholder="{{inputProperties.placeholder}} "/>\n\n\n\n  <div class="gumga-date" ng-show="opened" id="gumga-date-{{uid}}">\n    <div class="month" style="background:{{config.background ? config.background : getDefaultConfiguration().background}}">\n      <ul>\n        <span data-ng-click="alterView(\'hours\')"\n              ng-hide="type == \'DATE\'" ng-show="view != \'hours\' || type == \'HOUR\'"\n              class="hours">\n              {{gumgaDateValue.getHours() < 10 ? "0"+gumgaDateValue.getHours() : gumgaDateValue.getHours()}}\n                :\n              {{gumgaDateValue.getMinutes() < 10 ? "0"+gumgaDateValue.getMinutes() : gumgaDateValue.getMinutes()}}\n              </span><br>\n\n        <span data-ng-click="alterView(\'days\')"\n              ng-show="view == \'hours\' && (type == \'DATE\' || type == \'DATE_HOUR\') || type == \'DATE\'"\n              class="hours">{{value}}</span>\n\n        <br>\n        <li ng-show="view != \'hours\' && (type == \'DATE\' || type == \'DATE_HOUR\')" class="prev" ng-click="handlingMonths(gumgaDateValue, -1)">&#10094;</li>\n        <li ng-show="view != \'hours\' && (type == \'DATE\' || type == \'DATE_HOUR\')" class="next" ng-click="handlingMonths(gumgaDateValue, +1)">&#10095;</li>\n        <li ng-show="view != \'hours\' && (type == \'DATE\' || type == \'DATE_HOUR\')" style="text-align:center">\n          <span data-ng-click="alterView(\'months\')">{{getMonth()}}</span><br>\n          <span data-ng-click="alterView(\'months\')" style="font-size:18px">{{getYear()}}</span>\n        </li>\n\n        <div class="gumga-date-hour" ng-show="view == \'hours\'">\n            <span class="glyphicon glyphicon-chevron-up" ng-click="handlingHours(1)"></span>\n              <li>{{gumgaDateValue.getHours() < 10 ? "0"+gumgaDateValue.getHours() : gumgaDateValue.getHours()}}</li>\n            <span class="glyphicon glyphicon-chevron-down" ng-click="handlingHours(-1)"></span>\n        </div>\n        <div ng-show="view == \'hours\'" class="gumga-date-separator">\n          <span>:</span>\n        </div>\n        <div class="gumga-date-minutes" ng-show="view == \'hours\'">\n          <span class="glyphicon glyphicon-chevron-up" ng-click="handlingMinutes(1)"></span>\n            <li >{{gumgaDateValue.getMinutes() < 10 ? "0"+gumgaDateValue.getMinutes() : gumgaDateValue.getMinutes()}}</li>\n          <span class="glyphicon glyphicon-chevron-down" ng-click="handlingMinutes(-1)"></span>\n        </div>\n\n      </ul>\n    </div>\n\n    <div class="year-and-month" id="year-and-month-{{uid}}">\n      <ul class="change-month" ng-show="view == \'months\'" ng-repeat="year in years">\n        <span class="year">{{year}}</span>\n\n        <div style="width: 170px;float: right;">\n          <li data-ng-repeat="month in getGumgaMonths(true)" data-ng-click="setYearAndMonth(year, month)">\n            <span ng-class="{\'active\' : isThatMonth(year, month)}">{{month}}</span>\n          </li>\n        </div>\n\n      </ul>\n    </div>\n\n    <ul class="weekdays" ng-show="view == \'days\'">\n      <li ng-repeat="weekday in getWeekDays()">{{weekday}}</li>\n    </ul>\n    <ul class="days" ng-show="view == \'days\'">\n      <li data-ng-click="setDay(row)" data-ng-repeat="row in rows track by $index">\n          <span ng-class="{\'active\' : isToday(row)}" style="{{row.style}}">{{row.value}}</span>\n      </li>\n    </ul>\n  </div>\n\n';
+exports.default = '\n  <style>' + _dateStyle2.default + '</style>\n\n  <input  ng-focus="config.open()"\n          ng-model="value"\n          gumga-date-mask="{{mask}}"\n          ng-disabled="ngDisabled"\n          class="gumga-date-input {{inputProperties.class}}"\n          placeholder="{{inputProperties.placeholder}} "/>\n\n\n\n  <div class="gumga-date" ng-show="opened" id="gumga-date-{{uid}}" style="{{getPosition()}}">\n    <div class="month" style="background:{{config.background ? config.background : getDefaultConfiguration().background}}">\n      <ul>\n        <span data-ng-click="alterView(\'hours\')"\n              ng-hide="type == \'DATE\'" ng-show="view != \'hours\' || type == \'HOUR\'"\n              class="hours">\n              {{gumgaDateValue.getHours() < 10 ? "0"+gumgaDateValue.getHours() : gumgaDateValue.getHours()}}\n                :\n              {{gumgaDateValue.getMinutes() < 10 ? "0"+gumgaDateValue.getMinutes() : gumgaDateValue.getMinutes()}}\n              </span><br>\n\n        <span data-ng-click="alterView(\'days\')"\n              ng-show="view == \'hours\' && (type == \'DATE\' || type == \'DATE_HOUR\') || type == \'DATE\'"\n              class="hours">{{value}}</span>\n\n        <br>\n        <li ng-show="view != \'hours\' && (type == \'DATE\' || type == \'DATE_HOUR\')" class="prev" ng-click="handlingMonths(gumgaDateValue, -1)">&#10094;</li>\n        <li ng-show="view != \'hours\' && (type == \'DATE\' || type == \'DATE_HOUR\')" class="next" ng-click="handlingMonths(gumgaDateValue, +1)">&#10095;</li>\n        <li ng-show="view != \'hours\' && (type == \'DATE\' || type == \'DATE_HOUR\')" style="text-align:center">\n          <span data-ng-click="alterView(\'months\')">{{getMonth()}}</span><br>\n          <span data-ng-click="alterView(\'months\')" style="font-size:18px">{{getYear()}}</span>\n        </li>\n\n        <div class="gumga-date-hour" ng-show="view == \'hours\'">\n            <span class="glyphicon glyphicon-chevron-up" ng-click="handlingHours(1)"></span>\n              <li>{{gumgaDateValue.getHours() < 10 ? "0"+gumgaDateValue.getHours() : gumgaDateValue.getHours()}}</li>\n            <span class="glyphicon glyphicon-chevron-down" ng-click="handlingHours(-1)"></span>\n        </div>\n        <div ng-show="view == \'hours\'" class="gumga-date-separator">\n          <span>:</span>\n        </div>\n        <div class="gumga-date-minutes" ng-show="view == \'hours\'">\n          <span class="glyphicon glyphicon-chevron-up" ng-click="handlingMinutes(1)"></span>\n            <li >{{gumgaDateValue.getMinutes() < 10 ? "0"+gumgaDateValue.getMinutes() : gumgaDateValue.getMinutes()}}</li>\n          <span class="glyphicon glyphicon-chevron-down" ng-click="handlingMinutes(-1)"></span>\n        </div>\n\n      </ul>\n    </div>\n\n    <div class="year-and-month" id="year-and-month-{{uid}}">\n      <ul class="change-month" ng-show="view == \'months\'" ng-repeat="year in years">\n        <span class="year">{{year}}</span>\n\n        <div style="width: 170px;float: right;">\n          <li data-ng-repeat="month in getGumgaMonths(true)" data-ng-click="setYearAndMonth(year, month)">\n            <span ng-class="{\'active\' : isThatMonth(year, month)}">{{month}}</span>\n          </li>\n        </div>\n\n      </ul>\n    </div>\n\n    <ul class="weekdays" ng-show="view == \'days\'">\n      <li ng-repeat="weekday in getWeekDays()">{{weekday}}</li>\n    </ul>\n    <ul class="days" ng-show="view == \'days\'">\n      <li data-ng-click="setDay(row)" data-ng-repeat="row in rows track by $index">\n          <span ng-class="{\'active\' : isToday(row)}" style="{{row.style}}">{{row.value}}</span>\n      </li>\n    </ul>\n  </div>\n\n';
 
 },{"./date.style.js":4}]},{},[1]);

@@ -12,6 +12,9 @@
         minYear: 1905,
         timeZone: "America/Sao_Paulo",
         maxYear: 2050,
+        closeOnChange: false,
+        showCalendar: true,
+        position: 'BOTTOM_LEFT',
         inputProperties: {
           class: 'form-control'
         }

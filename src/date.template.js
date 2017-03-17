@@ -12,7 +12,7 @@ export default `
 
 
 
-  <div class="gumga-date" ng-show="opened" id="gumga-date-{{uid}}">
+  <div class="gumga-date" ng-show="opened" id="gumga-date-{{uid}}" style="{{getPosition()}}">
     <div class="month" style="background:{{config.background ? config.background : getDefaultConfiguration().background}}">
       <ul>
         <span data-ng-click="alterView('hours')"
