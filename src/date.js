@@ -27,8 +27,8 @@
           self.range = function(min, max, step) {
               if(!self.opened) return [];
               step = step || 1;
-              var input = [];
-              for (var i = min; i <= max; i += step) {
+              let input = [];
+              for (let i = min; i <= max; i += step) {
                   input.push(i);
               }
               return input;
@@ -368,9 +368,9 @@
           const newCalendar = (mouth, year) => {
             if(!self.opened) return;
             let primaryDay = new Date(year, mouth, 1), count = 1;
-            var possibilities = new Array(42);
+            let possibilities = new Array(42);
 
-            for(var x = 0; x < possibilities.length; x++){
+            for(let x = 0; x < possibilities.length; x++){
           		possibilities[x] = "";
           	}
 

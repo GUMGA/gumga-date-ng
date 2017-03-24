@@ -13,8 +13,8 @@
 
     <div class="container">
       <div class="col-md-4">
-        <button type="button" name="button" ng-click="nascimento = null">Abracadabra</button>
-        <button type="button" name="button" ng-click="nasConfiguracao.close($event)">Fechacadabra</button>
+        <button type="button" name="button" ng-click="config.open($event)">Abracadabra</button>
+        <button type="button" name="button" ng-click="config.close($event)">Fechacadabra</button>
         <br>
         NG-MODEL: <span>{{nascimento}}</span>
       </div>
@@ -33,7 +33,7 @@
 
       <div class="row">
         <div class="col-md-4">
-          <label>Data de nascimento</label>
+          <label>Data </label>
 
           <gumga-date ng-model="nascimento" name="nascimento" configuration="config">
           </gumga-date>
@@ -43,9 +43,9 @@
           <input class="form-control"/>
         </div>
         <div class="col-md-4">
-          <label>Data de nascimento</label>
-          <gumga-date ng-model="nascimento2"  name="nascimento2" configuration="teste">
-          </gumga-date>
+          <!-- <label>HOra</label>
+          <gumga-date ng-model="nascimento" name="nascimento" configuration="config2">
+          </gumga-date> -->
         </div>
       </div>
 

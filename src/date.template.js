@@ -4,7 +4,7 @@ export default `
   <style>${style}</style>
 
   <input  ng-focus="config.open();inputFocused = true;"
-          ng-blur="inputFocused = false;"
+          ng-blur="config.close();inputFocused = false;"
           ng-model="value"
           gumga-date-mask="{{mask}}"
           ng-disabled="ngDisabled"
