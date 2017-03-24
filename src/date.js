@@ -321,6 +321,16 @@
                 //ENTER
                 self.setNgModel(self.gumgaDateValue);
                 self.config.close();
+                break;
+              case 9:
+                let change = self.config.hasOwnProperty('changeDateOnTab') ? self.config.changeDateOnTab : self.getDefaultConfiguration().changeDateOnTab;
+                if((self.inputFocused && !self.ngModel) && change){
+                  self.gumgaDateValue = new Date();
+                  self.setNgModel(self.gumgaDateValue);
+                }else if(!self.inputFocused){
+                  self.config.close();
+                }
+                break;
             }
 
             $timeout(() => {

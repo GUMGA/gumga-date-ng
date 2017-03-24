@@ -8,7 +8,8 @@
       })
       .controller('ctrl', function($scope) {
 
-  
+        $scope.nascimento = new Date("2017-03-25T10:30:00-03:00");
+
         $scope.teste = function(){
           $scope.nascimento = new Date("2017-03-25T10:30:00-03:00");
         }
@@ -19,6 +20,8 @@
           fontColor: '#fff',
           format: 'dd/MM/yyyy HH:mm',
           position: 'BOTTOM_LEFT',
+          closeOnChange : false,
+          changeDateOnTab: true,
           showCalendar: true,
           timeZone: "America/Sao_Paulo",
           change: function(data){
