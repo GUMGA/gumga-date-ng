@@ -8,7 +8,7 @@
         primaryColor: '#1abc9c',
         fontColor: '#fff',
         format: 'dd/MM/yyyy',
-        minYear: 1905,
+        minYear: 1700,
         timeZone: "America/Sao_Paulo",
         maxYear: 2050,
         position: 'BOTTOM_LEFT',

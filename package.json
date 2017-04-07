@@ -1,6 +1,6 @@
 {
   "name": "gumga-date-ng",
-  "version" : "1.2.1",
+  "version" : "1.2.3",
   "description": "Gumga Date",
   "main": "./src/date.js",
   "directories": {

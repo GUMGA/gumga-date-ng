@@ -159,6 +159,7 @@
           self.getFormatLength = () => self.inputFormat ? self.inputFormat.replace(/[^a-zA-Z0-9]/g,'').length : 0;
 
           self.setGumgaDateValue = (value, event) => {
+              if(!value) return;
               self.inputFormat = self.config.format ? self.config.format : self.getDefaultConfiguration().format;
               let minYear = self.getMinYear();
               let maxYear = self.getMaxYear();
@@ -275,7 +276,11 @@
               let date = moment(self.ngModel).toDate();
               self.gumgaDateValue = date;
               newCalendar(date.getMonth(), date.getFullYear());
-              self.value = formatDate(angular.copy(date), self.inputFormat);
+              let timeZone = self.config.timeZone ? self.config.timeZone : self.getDefaultConfiguration().timeZone;
+              let dateValue = moment(self.value, self.inputFormat.toUpperCase().replace('HH:MM', 'hh:mm')).tz(timeZone).toDate()
+              if(self.value != formatDate(angular.copy(date), self.inputFormat) && dateValue.getMinutes() != date.getMinutes()+1){
+                self.value = formatDate(angular.copy(date), self.inputFormat);
+              }
             }
             if(!value && !self.inputFocused){
               self.gumgaDateValue = new Date();
@@ -288,7 +293,7 @@
 
           self.setNgModel = (value) => {
             let timeZone = self.config.timeZone ? self.config.timeZone : self.getDefaultConfiguration().timeZone;
-            self.ngModel = moment.tz(value, timeZone).format();
+            self.ngModel = moment.tz(value, timeZone).format()
             newCalendar(value.getMonth(), value.getFullYear());
             self.value = formatDate(angular.copy(value), self.inputFormat);
           }
