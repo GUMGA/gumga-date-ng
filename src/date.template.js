@@ -32,7 +32,7 @@ export default `
         <li ng-show="view != 'hours' && (type == 'DATE' || type == 'DATE_HOUR')" class="prev" ng-click="handlingMonths(gumgaDateValue, -1)">&#10094;</li>
         <li ng-show="view != 'hours' && (type == 'DATE' || type == 'DATE_HOUR')" class="next" ng-click="handlingMonths(gumgaDateValue, +1)">&#10095;</li>
         <li ng-show="view != 'hours' && (type == 'DATE' || type == 'DATE_HOUR')" style="text-align:center">
-          <span data-ng-click="alterView('months')">{{getMonth()}}</span><br>
+          <span style="padding: 10px;" data-ng-click="alterView('months')">{{getMonth()}}</span><br>
           <span data-ng-click="alterView('months')" style="font-size:18px">{{getYear()}}</span>
         </li>
 

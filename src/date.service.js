@@ -16,7 +16,7 @@
         showCalendar: true,
         closeOnChange: false,
         inputProperties: {
-          class: 'form-control'
+          class: 'form-control gmd'
         }
       }
 

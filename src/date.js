@@ -115,31 +115,28 @@
 
 
           self.alterView = view => {
-            self.view = view;
-            if(view == 'months'){
-              if(!self.years)
-                self.years = self.range(self.getMinYear(), self.getMaxYear());
-              handlingScroll();
-            }
+            $timeout(()=>{
+              self.view = view;
+              if(view == 'months'){
+                if(!self.years)
+                  self.years = self.range(self.getMinYear(), self.getMaxYear());
+                handlingScroll();
+              }
+            })
           }
 
 
           let calendar = undefined;
 
           const animateScroll = (size ,scrollTop) => {
-            if(size > scrollTop){
-              let x = (Math.abs(size - scrollTop + 2000) / 30);
-              calendar.scrollTop += x < 1 ? 1 : x;
-              $timeout(()=>animateScroll(size, calendar.scrollTop));
-            }else if(scrollTop > size && scrollTop > 0){
-              let x = (Math.abs(scrollTop - size) / 30);
-              calendar.scrollTop -= x < 1 ? 1 : x;
-              $timeout(()=>animateScroll(size, calendar.scrollTop));
-            }
+            angular.element(calendar).animate({ scrollTop: size }, 400);
           }
 
-          const handlingScroll = () => {
+          $timeout(()=>{
             calendar = document.getElementById('year-and-month-'+self.uid)
+          }, 1000)
+
+          const handlingScroll = () => {
             $timeout(()=>{
               let size = self.getScrollSize();
               animateScroll(size, calendar.scrollTop)
