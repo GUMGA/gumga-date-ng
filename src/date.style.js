@@ -119,7 +119,7 @@ export default `
 
   .gumga-date > .month ul li {
       color: white;
-      font-size: 20px;
+      font-size: 18px;
       text-transform: uppercase;
       cursor: pointer;
       letter-spacing: 3px;

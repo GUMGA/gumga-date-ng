@@ -13,20 +13,12 @@
 
     <div class="container">
       <div class="col-md-4">
-        <button type="button" name="button" ng-click="config.open($event)">Abracadabra</button>
-        <button type="button" name="button" ng-click="config.close($event)">Fechacadabra</button>
+        <button type="button" name="button" ng-click="config.open($event)">Abrir</button>
+        <button type="button" name="button" ng-click="config.close($event)">Fechar</button>
         <br>
         NG-MODEL: <span>{{nascimento}}</span>
       </div>
       <br><br><br>
-      <div class="col-md-4">
-        <button type="button" name="button" ng-click="teste()">Colocar Data</button>
-        <br>
-        NG-MODEL: <span>{{nascimento2}}</span>
-        <br><br><br><br><br><br><br>
-      </div>
-      <br><br><br>
-
     </div>
 
     <div class="container">
@@ -39,25 +31,20 @@
           <br>
           <label>Data </label>
 
-          <gumga-date ng-model="nascimento" name="nascimento" configuration="config">
+          <gumga-date ng-model="nascimento"
+                      name="nascimento"
+                       configuration="config">
           </gumga-date>
 
           <br>
           <label>Email</label>
           <input class="form-control"/>
         </div>
-        <div class="col-md-4">
-          <!-- <label>HOra</label>
-          <gumga-date ng-model="nascimento" name="nascimento" configuration="config2">
-          </gumga-date> -->
-        </div>
       </div>
 
     </div>
 
-    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js">
-
-    </script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/angular.js/1.5.8/angular.min.js"></script>
 
@@ -65,7 +52,7 @@
     <script type="text/javascript" src="../node_modules/moment-timezone/builds/moment-timezone-with-data.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/angular-i18n/1.6.3/angular-locale_pt-br.min.js"></script>
     <script src="app.js"></script>
-    <script src="../dist/gumga-date.js"></script>
+    <script src="dist/gumga-date.js"></script>
 
   </body>
 </html>

@@ -21,7 +21,7 @@
           format: 'dd/MM/yyyy HH:mm',
           position: 'BOTTOM_LEFT',
           closeOnChange : false,
-          changeDateOnTab: true,
+          changeDateOnTab: false,
           showCalendar: true,
           timeZone: "America/Sao_Paulo",
           change: function(data){
