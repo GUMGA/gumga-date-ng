@@ -1,6 +1,6 @@
 (function(angular){
 
-    angular.module('app', ['gumga.date'])
+    angular.module('app', ['gumga.date', 'gumga.layout'])
       .config(function(GumgaDateServiceProvider){
         GumgaDateServiceProvider.setDefaultConfiguration({
           fontColor: '#000'
@@ -20,7 +20,7 @@
           fontColor: '#fff',
           format: 'dd/MM/yyyy HH:mm',
           position: 'BOTTOM_LEFT',
-          closeOnChange : false,
+          closeOnChange : true,
           changeDateOnTab: false,
           showCalendar: true,
           timeZone: "America/Sao_Paulo",

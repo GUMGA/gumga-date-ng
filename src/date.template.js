@@ -1,8 +1,29 @@
 import style from './date.style.js'
 
-export default `
-  <style>${style}</style>
+function useGumgaLayout(){
+  try {
+    return !!angular.module('gumga.layout');
+  } catch (error) {
+    return false;
+  }
+}
 
+const input = useGumgaLayout() ?
+  `
+    <div style="{{label ? 'height: 34px;' : ''}}">
+      <input  ng-focus="config.open();inputFocused = true;"
+              ng-blur="inputFocused = false;"
+              ng-model="value"
+              gumga-date-mask="{{mask}}"
+              ng-disabled="ngDisabled"
+              class="gumga-date-input {{inputProperties.class}}"
+              placeholder="{{inputProperties.placeholder}} "/>
+        <span class="bar"></span>
+        <label for="email" class="control-label" ng-if="label">{{label}}</label>
+    </div>
+  `
+  :
+  `
   <input  ng-focus="config.open();inputFocused = true;"
           ng-blur="inputFocused = false;"
           ng-model="value"
@@ -10,8 +31,12 @@ export default `
           ng-disabled="ngDisabled"
           class="gumga-date-input {{inputProperties.class}}"
           placeholder="{{inputProperties.placeholder}} "/>
+  `;
 
+export default `
+  <style>${style}</style>
 
+  ${input}
 
   <div class="gumga-date" ng-show="opened" id="gumga-date-{{uid}}" style="{{getPosition()}}">
     <div class="month" style="background:{{config.background ? config.background : getDefaultConfiguration().background}}">
