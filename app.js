@@ -18,7 +18,7 @@
 
         $scope.config = {
           fontColor: '#fff',
-          format: 'dd/MM/yyyy HH:mm',
+          format: 'dd/MM/yyyy',
           position: 'BOTTOM_LEFT',
           closeOnChange : true,
           changeDateOnTab: false,

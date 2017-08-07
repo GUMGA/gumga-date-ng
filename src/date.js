@@ -159,19 +159,24 @@
 
           self.setGumgaDateValue = (value, event) => {
               if(!value) return;
-              self.inputFormat = self.config.format ? self.config.format : self.getDefaultConfiguration().format;
-              let minYear = self.getMinYear();
-              let maxYear = self.getMaxYear();
-              let timeZone = self.config.timeZone ? self.config.timeZone : self.getDefaultConfiguration().timeZone;
+              checkDateIsValid(value);
+          }
 
-              let date = moment(value, self.inputFormat.toUpperCase().replace('HH:MM', 'hh:mm')).tz(timeZone).toDate()
-              if(value && date != 'Invalid Date' && (date.getFullYear() >= minYear && date.getFullYear() <= maxYear)){
-                self.gumgaDateValue = date;
-                self.setNgModel(self.gumgaDateValue)
-                if(self.config.change) self.config.change(self.ngModel);
-              }else{
-                self.value = null;
+          function checkDateIsValid(value, ignoreModel){
+            self.inputFormat = self.config.format ? self.config.format : self.getDefaultConfiguration().format;
+            let minYear = self.getMinYear();
+            let maxYear = self.getMaxYear();
+            let timeZone = self.config.timeZone ? self.config.timeZone : self.getDefaultConfiguration().timeZone;
+            let date = moment(value, self.inputFormat.toUpperCase().replace('HH:MM', 'hh:mm')).tz(timeZone).toDate();
+            if(value && date != 'Invalid Date' && (date.getFullYear() >= minYear && date.getFullYear() <= maxYear)){
+              self.gumgaDateValue = date;
+              if(!ignoreModel){
+                self.setNgModel(self.gumgaDateValue);
               }
+              if(self.config.change) self.config.change(self.ngModel);
+            }else{
+              self.value = null;
+            }
           }
 
           self.getMinYear = () => {
@@ -279,7 +284,7 @@
                 let timeZone = self.config.timeZone ? self.config.timeZone : self.getDefaultConfiguration().timeZone;
                 let dateValue = moment(self.value, self.inputFormat.toUpperCase().replace('HH:MM', 'hh:mm')).tz(timeZone).toDate()
                 if(self.value != formatDate(angular.copy(date), self.inputFormat) && dateValue.getMinutes() != date.getMinutes()+1){
-                  self.value = formatDate(angular.copy(date), self.inputFormat);
+                  checkDateIsValid(formatDate(angular.copy(date), self.inputFormat), true);
                 }
               }
               if(!value && !self.inputFocused){
