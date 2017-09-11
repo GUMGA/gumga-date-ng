@@ -13,7 +13,8 @@
         scope: {
            config: '=?configuration',
            ngModel: '=',
-           ngDisabled: '=?'
+           ngDisabled: '=?',
+           ngBlur: '&?'
         },
         require: '^ngModel',
         link: (scope, elm, attrs) => {
@@ -25,6 +26,12 @@
           self.label = attrs.label;
 
           self.getDefaultConfiguration = () => GumgaDateService.getDefaultConfiguration();
+
+          self.dateBlur = (evt) => {
+            if(self.ngBlur){
+              self.ngBlur({$event: evt});
+            }
+          }
 
           self.range = function(min, max, step) {
               if(!self.opened) return [];

@@ -12,7 +12,7 @@ const input = useGumgaLayout() ?
   `
     <div style="{{label ? 'height: 34px;' : ''}}">
       <input  ng-focus="config.open();inputFocused = true;"
-              ng-blur="inputFocused = false;"
+              ng-blur="inputFocused = false;dateBlur($event);"
               ng-model="value"
               gumga-date-mask="{{mask}}"
               ng-disabled="ngDisabled"
@@ -25,7 +25,7 @@ const input = useGumgaLayout() ?
   :
   `
   <input  ng-focus="config.open();inputFocused = true;"
-          ng-blur="inputFocused = false;"
+          ng-blur="inputFocused = false;dateBlur($event);"
           ng-model="value"
           gumga-date-mask="{{mask}}"
           ng-disabled="ngDisabled"

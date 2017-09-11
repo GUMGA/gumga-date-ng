@@ -10,8 +10,8 @@
 
         $scope.nascimento = new Date("2017-03-25T10:30:00-03:00");
 
-        $scope.teste = function(){
-          $scope.nascimento = new Date("2017-03-25T10:30:00-03:00");
+        $scope.teste = function(evt){
+          console.log(evt)
         }
 
         // LEFT_BOTTOM,LEFT_TOP,BOTTOM_LEFT,BOTTOM_RIGHT,RIGHT_BOTTOM,RIGHT_TOP,TOP_LEFT,TOP_RIGHT
