@@ -20,17 +20,20 @@ const input = useGumgaLayout() ?
               placeholder="{{inputProperties.placeholder}} "/>
         <span class="bar"></span>
         <label for="email" class="control-label" ng-if="label">{{label}}</label>
+        <i class="material-icons" ng-show="icon" ng-click="iconClick($event);">{{icon}}</i>
     </div>
   `
   :
   `
-  <input  ng-focus="config.open();inputFocused = true;"
-          ng-blur="inputFocused = false;dateBlur($event);"
-          ng-model="value"
-          gumga-date-mask="{{mask}}"
-          ng-disabled="ngDisabled"
-          class="gumga-date-input {{inputProperties.class}}"
-          placeholder="{{inputProperties.placeholder}} "/>
+   <div>
+    <input  ng-focus="config.open();inputFocused = true;"
+            ng-blur="inputFocused = false;dateBlur($event);"
+            ng-model="value"
+            gumga-date-mask="{{mask}}"
+            ng-disabled="ngDisabled"
+            class="gumga-date-input {{inputProperties.class}}"
+            placeholder="{{inputProperties.placeholder}} "/>
+    </div>
   `;
 
 export default `

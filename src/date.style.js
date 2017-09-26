@@ -250,4 +250,34 @@ export default `
     border-radius: 10px;
   }
 
+
+  gumga-date > div {
+    position: relative;
+  }
+
+  gumga-date i.material-icons{
+    position: absolute;
+    font-size: 20px;
+    display: inline-block;
+    height: 100%;
+    vertical-align: middle;
+    margin: auto;
+    top: 0;
+    right: 10px;
+    text-align: center;
+    bottom: 0;
+    padding-top: 7px;
+  }
+
+
+
+
+
+
+
+
+
+
+
+
 `

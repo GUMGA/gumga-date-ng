@@ -24,6 +24,13 @@
           self.config = self.config || {};
 
           self.label = attrs.label;
+          self.icon  = attrs.icon;
+
+          self.iconClick = ($event) => {
+            $event.stopPropagation();
+            let input = elm.find('input');
+            input.focus();
+          }
 
           self.getDefaultConfiguration = () => GumgaDateService.getDefaultConfiguration();
 
@@ -383,7 +390,7 @@
             $timeout(self.config.close);
           })
 
-          let listenerKey = document.addEventListener('keyup', event => {
+          let listenerKey = document.addEventListener('keydown', event => {
             self.opened && self.view == 'days' ? incrementDay(event) : angular.noop();
             self.opened && self.view == 'hours' ? incrementMinutes(event) : angular.noop();
           })
