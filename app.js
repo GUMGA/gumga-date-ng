@@ -40,6 +40,45 @@
           }
         }
 
+          $scope.config3 = {
+              fontColor: '#fff',
+              format: 'dd/MM/yyyy',
+              position: 'BOTTOM_LEFT',
+              closeOnChange : true,
+              changeDateOnTab: false,
+              showCalendar: true,
+              timeZone: "America/Sao_Paulo",
+              change: function(data){
+                  // console.log(data)
+              }
+          }
+
+          $scope.config4 = {
+              fontColor: '#fff',
+              format: 'dd/MM/yyyy',
+              position: 'BOTTOM_LEFT',
+              closeOnChange : true,
+              changeDateOnTab: false,
+              showCalendar: true,
+              timeZone: "America/Sao_Paulo",
+              change: function(data){
+                  // console.log(data)
+              }
+          }
+          $scope.config5 = {
+              fontColor: '#fff',
+              format: 'dd/MM/yyyy',
+              position: 'BOTTOM_LEFT',
+              closeOnChange : true,
+              changeDateOnTab: false,
+              showCalendar: true,
+              timeZone: "America/Sao_Paulo",
+              change: function(data){
+                  // console.log(data)
+              }
+          }
+
+
       });
 
 })(window.angular);

@@ -659,7 +659,7 @@ function useGumgaLayout() {
 
 var input = useGumgaLayout() ? '\n    <div style="{{label ? \'height: 34px;\' : \'\'}}">\n      <input  ng-focus="config.open();inputFocused = true;"\n              ng-blur="inputFocused = false;dateBlur($event);"\n              ng-model="value"\n              gumga-date-mask="{{mask}}"\n              ng-disabled="ngDisabled"\n              class="gumga-date-input {{inputProperties.class}}"\n              placeholder="{{inputProperties.placeholder}} "/>\n        <span class="bar"></span>\n        <label for="email" class="control-label" ng-if="label">{{label}}</label>\n        <i class="material-icons" ng-show="icon" ng-click="iconClick($event);">{{icon}}</i>\n    </div>\n  ' : '\n   <div>\n    <input  ng-focus="config.open();inputFocused = true;"\n            ng-blur="inputFocused = false;dateBlur($event);"\n            ng-model="value"\n            gumga-date-mask="{{mask}}"\n            ng-disabled="ngDisabled"\n            class="gumga-date-input {{inputProperties.class}}"\n            placeholder="{{inputProperties.placeholder}} "/>\n    </div>\n  ';
 
-exports.default = '\n  <style>' + _dateStyle2.default + '</style>\n\n  ' + input + '\n\n  <div class="gumga-date" ng-show="opened" id="gumga-date-{{uid}}" style="{{getPosition()}}">\n    <div class="month" style="background:{{config.background ? config.background : getDefaultConfiguration().background}}">\n      <ul>\n        <span data-ng-click="alterView(\'hours\')"\n              ng-hide="type == \'DATE\'" ng-show="view != \'hours\' || type == \'HOUR\'"\n              class="hours">\n              {{gumgaDateValue.getHours() < 10 ? "0"+gumgaDateValue.getHours() : gumgaDateValue.getHours()}}\n                :\n              {{gumgaDateValue.getMinutes() < 10 ? "0"+gumgaDateValue.getMinutes() : gumgaDateValue.getMinutes()}}\n              </span><br>\n\n        <span data-ng-click="alterView(\'days\')"\n              ng-show="view == \'hours\' && (type == \'DATE\' || type == \'DATE_HOUR\') || type == \'DATE\'"\n              class="hours">{{value}}</span>\n\n        <br>\n        <li ng-show="view != \'hours\' && (type == \'DATE\' || type == \'DATE_HOUR\')" class="prev" ng-click="handlingMonths(gumgaDateValue, -1)">&#10094;</li>\n        <li ng-show="view != \'hours\' && (type == \'DATE\' || type == \'DATE_HOUR\')" class="next" ng-click="handlingMonths(gumgaDateValue, +1)">&#10095;</li>\n        <li ng-show="view != \'hours\' && (type == \'DATE\' || type == \'DATE_HOUR\')" style="text-align:center">\n          <span style="padding: 10px;" data-ng-click="alterView(\'months\')">{{getMonth()}}</span><br>\n          <span data-ng-click="alterView(\'months\')" style="font-size:18px">{{getYear()}}</span>\n        </li>\n\n        <div class="gumga-date-hour" ng-show="view == \'hours\'">\n            <span class="glyphicon glyphicon-chevron-up" ng-click="handlingHours(1)"></span>\n              <li>{{gumgaDateValue.getHours() < 10 ? "0"+gumgaDateValue.getHours() : gumgaDateValue.getHours()}}</li>\n            <span class="glyphicon glyphicon-chevron-down" ng-click="handlingHours(-1)"></span>\n        </div>\n        <div ng-show="view == \'hours\'" class="gumga-date-separator">\n          <span>:</span>\n        </div>\n        <div class="gumga-date-minutes" ng-show="view == \'hours\'">\n          <span class="glyphicon glyphicon-chevron-up" ng-click="handlingMinutes(1)"></span>\n            <li >{{gumgaDateValue.getMinutes() < 10 ? "0"+gumgaDateValue.getMinutes() : gumgaDateValue.getMinutes()}}</li>\n          <span class="glyphicon glyphicon-chevron-down" ng-click="handlingMinutes(-1)"></span>\n        </div>\n\n      </ul>\n    </div>\n\n    <div class="year-and-month" id="year-and-month-{{uid}}">\n      <ul class="change-month" ng-show="view == \'months\'" ng-repeat="year in years">\n        <span class="year">{{year}}</span>\n\n        <div style="width: 170px;float: right;">\n          <li data-ng-repeat="month in getGumgaMonths(true)" data-ng-click="setYearAndMonth(year, month)">\n            <span ng-class="{\'active\' : isThatMonth(year, month)}">{{month}}</span>\n          </li>\n        </div>\n\n      </ul>\n    </div>\n\n    <ul class="weekdays" ng-show="view == \'days\'">\n      <li ng-repeat="weekday in getWeekDays()">{{weekday}}</li>\n    </ul>\n    <ul class="days" ng-show="view == \'days\'">\n      <li data-ng-click="setDay(row)" data-ng-repeat="row in rows track by $index">\n          <span ng-class="{\'active\' : isToday(row)}" style="{{row.style}}">{{row.value}}</span>\n      </li>\n    </ul>\n  </div>\n\n';
+exports.default = '\n  <style>' + _dateStyle2.default + '</style>\n\n  ' + input + '\n\n  <div class="gumga-date" ng-show="opened" id="gumga-date-{{uid}}" style="{{getPosition()}}">\n    <div class="month" style="background:{{config.background ? config.background : getDefaultConfiguration().background}}">\n      <ul>\n        <span data-ng-click="alterView(\'hours\')"\n              ng-hide="type == \'DATE\'" ng-show="view != \'hours\' || type == \'HOUR\'"\n              class="hours">\n              {{gumgaDateValue.getHours() < 10 ? "0"+gumgaDateValue.getHours() : gumgaDateValue.getHours()}}\n                :\n              {{gumgaDateValue.getMinutes() < 10 ? "0"+gumgaDateValue.getMinutes() : gumgaDateValue.getMinutes()}}\n              </span><br>\n\n        <span data-ng-click="alterView(\'days\')"\n              ng-show="view == \'hours\' && (type == \'DATE\' || type == \'DATE_HOUR\') || type == \'DATE\'"\n              class="hours">{{value}}</span>\n\n        <br>\n        <li ng-show="view != \'hours\' && (type == \'DATE\' || type == \'DATE_HOUR\')" class="prev" ng-click="handlingMonths(gumgaDateValue, -1)">&#10094;</li>\n        <li ng-show="view != \'hours\' && (type == \'DATE\' || type == \'DATE_HOUR\')" class="next" ng-click="handlingMonths(gumgaDateValue, +1)">&#10095;</li>\n        <li ng-show="view != \'hours\' && (type == \'DATE\' || type == \'DATE_HOUR\')" style="text-align:center">\n          <span style="padding: 10px;" data-ng-click="alterView(\'months\')">{{getMonth()}}</span><br>\n          <span data-ng-click="alterView(\'months\')" style="font-size:18px">{{getYear()}}</span>\n        </li>\n\n        <div class="gumga-date-hour" ng-show="view == \'hours\'">\n            <span class="glyphicon glyphicon-chevron-up" ng-click="handlingHours(1)"></span>\n              <li>{{gumgaDateValue.getHours() < 10 ? "0"+gumgaDateValue.getHours() : gumgaDateValue.getHours()}}</li>\n            <span class="glyphicon glyphicon-chevron-down" ng-click="handlingHours(-1)"></span>\n        </div>\n        <div ng-show="view == \'hours\'" class="gumga-date-separator">\n          <span>:</span>\n        </div>\n        <div class="gumga-date-minutes" ng-show="view == \'hours\'">\n          <span class="glyphicon glyphicon-chevron-up" ng-click="handlingMinutes(1)"></span>\n            <li >{{gumgaDateValue.getMinutes() < 10 ? "0"+gumgaDateValue.getMinutes() : gumgaDateValue.getMinutes()}}</li>\n          <span class="glyphicon glyphicon-chevron-down" ng-click="handlingMinutes(-1)"></span>\n        </div>\n\n      </ul>\n    </div>\n\n    <div class="year-and-month" id="year-and-month-{{uid}}">\n      <ul class="change-month" ng-show="view == \'months\'" ng-repeat="year in years">\n        <span class="year">{{year}}</span>\n\n        <div style="width: 170px;float: right;">\n          <li data-ng-repeat="month in getGumgaMonths(true)" data-ng-click="setYearAndMonth(year, month)">\n            <span ng-class="{\'active\' : isThatMonth(year, month)}">{{month}}</span>\n          </li>\n        </div>\n\n      </ul>\n    </div>\n\n    <ul class="weekdays" ng-show="view == \'days\'">\n      <li ng-repeat="weekday in getWeekDays()">{{weekday}}</li>\n    </ul>\n    <ul class="days" ng-show="view == \'days\'">\n      <li data-ng-click="setDay(row, $event)" data-ng-repeat="row in rows track by $index">\n          <span ng-class="{\'active\' : isToday(row)}" style="{{row.style}}">{{row.value}}</span>\n      </li>\n    </ul>\n  </div>\n\n';
 
 /***/ }),
 /* 3 */
@@ -669,474 +669,488 @@ exports.default = '\n  <style>' + _dateStyle2.default + '</style>\n\n  ' + input
 
 
 (function () {
-  'use strict';
+    'use strict';
 
-  __webpack_require__(1);
-  __webpack_require__(0);
-  var TEMPLATE = __webpack_require__(2).default;
+    __webpack_require__(1);
+    __webpack_require__(0);
+    var TEMPLATE = __webpack_require__(2).default;
 
-  var GumgaDate = function GumgaDate($timeout, $filter, $locale, GumgaDateService) {
-    return {
-      restrict: 'E',
-      template: TEMPLATE,
-      scope: {
-        config: '=?configuration',
-        ngModel: '=',
-        ngDisabled: '=?',
-        ngBlur: '&?'
-      },
-      require: '^ngModel',
-      link: function link(scope, elm, attrs) {
-        var self = scope;
-        self.uid = Math.floor(Math.random() * 99999999);
+    var GumgaDate = function GumgaDate($timeout, $filter, $locale, GumgaDateService) {
+        return {
+            restrict: 'E',
+            template: TEMPLATE,
+            scope: {
+                config: '=?configuration',
+                ngModel: '=',
+                ngDisabled: '=?',
+                ngBlur: '&?'
+            },
+            require: '^ngModel',
+            link: function link(scope, elm, attrs) {
+                var self = scope;
+                self.uid = Math.floor(Math.random() * 99999999);
 
-        self.config = self.config || {};
+                self.config = self.config || {};
 
-        self.label = attrs.label;
-        self.icon = attrs.icon;
+                self.label = attrs.label;
+                self.icon = attrs.icon;
 
-        self.iconClick = function ($event) {
-          $event.stopPropagation();
-          var input = elm.find('input');
-          input.focus();
-        };
+                self.iconClick = function ($event) {
+                    $event.stopPropagation();
+                    var input = elm.find('input');
+                    input.focus();
+                };
 
-        self.getDefaultConfiguration = function () {
-          return GumgaDateService.getDefaultConfiguration();
-        };
+                self.getDefaultConfiguration = function () {
+                    return GumgaDateService.getDefaultConfiguration();
+                };
 
-        self.dateBlur = function (evt) {
-          if (self.ngBlur) {
-            self.ngBlur({ $event: evt });
-          }
-        };
+                self.dateBlur = function (evt) {
+                    if (self.ngBlur) {
+                        self.ngBlur({ $event: evt });
+                    }
+                };
 
-        self.range = function (min, max, step) {
-          if (!self.opened) return [];
-          step = step || 1;
-          var input = [];
-          for (var i = min; i <= max; i += step) {
-            input.push(i);
-          }
-          return input;
-        };
+                self.range = function (min, max, step) {
+                    if (!self.opened) return [];
+                    step = step || 1;
+                    var input = [];
+                    for (var i = min; i <= max; i += step) {
+                        input.push(i);
+                    }
+                    return input;
+                };
 
-        self.getScrollSize = function () {
-          if (!self.gumgaDateValue) return;
-          var index = self.gumgaDateValue.getFullYear() - self.getMinYear();
-          return index * 92 - 50;
-        };
+                self.getScrollSize = function () {
+                    if (!self.gumgaDateValue) return;
+                    var index = self.gumgaDateValue.getFullYear() - self.getMinYear();
+                    return index * 92 - 50;
+                };
 
-        self.getWeekDays = function () {
-          var dateformats = $locale.DATETIME_FORMATS;
-          return dateformats.SHORTDAY.map(function (day) {
-            return day.substring(0, 3);
-          });
-        };
+                self.getWeekDays = function () {
+                    var dateformats = $locale.DATETIME_FORMATS;
+                    return dateformats.SHORTDAY.map(function (day) {
+                        return day.substring(0, 3);
+                    });
+                };
 
-        self.getGumgaMonths = function (cut) {
-          var dateformats = $locale.DATETIME_FORMATS;
-          return dateformats.STANDALONEMONTH.map(function (day) {
-            return cut ? day.substring(0, 3) : day;
-          });
-        };
+                self.getGumgaMonths = function (cut) {
+                    var dateformats = $locale.DATETIME_FORMATS;
+                    return dateformats.STANDALONEMONTH.map(function (day) {
+                        return cut ? day.substring(0, 3) : day;
+                    });
+                };
 
-        var formatDate = function formatDate(date, format) {
-          return $filter('date')(date, format);
-        };
+                var formatDate = function formatDate(date, format) {
+                    return $filter('date')(date, format);
+                };
 
-        var setType = function setType() {
-          self.type = self.inputFormat.toLowerCase().indexOf('hh:mm') != -1 && self.inputFormat.toLowerCase().indexOf('dd') == -1 ? 'HOUR' : self.type;
+                var setType = function setType() {
+                    self.type = self.inputFormat.toLowerCase().indexOf('hh:mm') != -1 && self.inputFormat.toLowerCase().indexOf('dd') == -1 ? 'HOUR' : self.type;
 
-          self.type = self.inputFormat.toLowerCase().indexOf('hh:mm') != -1 && self.inputFormat.toLowerCase().indexOf('dd') != -1 ? 'DATE_HOUR' : self.type;
+                    self.type = self.inputFormat.toLowerCase().indexOf('hh:mm') != -1 && self.inputFormat.toLowerCase().indexOf('dd') != -1 ? 'DATE_HOUR' : self.type;
 
-          self.type = self.inputFormat.toLowerCase().indexOf('hh:mm') == -1 && self.inputFormat.toLowerCase().indexOf('dd') != -1 ? 'DATE' : self.type;
+                    self.type = self.inputFormat.toLowerCase().indexOf('hh:mm') == -1 && self.inputFormat.toLowerCase().indexOf('dd') != -1 ? 'DATE' : self.type;
 
-          if (self.type == 'HOUR') {
-            self.alterView('hours');
-          } else {
-            self.alterView('days');
-          }
-        };
+                    if (self.type == 'HOUR') {
+                        self.alterView('hours');
+                    } else {
+                        self.alterView('days');
+                    }
+                };
 
-        var init = function init() {
-          self.inputFormat = self.config.format ? self.config.format : self.getDefaultConfiguration().format;
-          setType();
+                var init = function init() {
+                    self.inputFormat = self.config.format ? self.config.format : self.getDefaultConfiguration().format;
+                    setType();
 
-          self.mask = self.inputFormat.replace(/[a-zA-Z\d]/g, '9');
+                    self.mask = self.inputFormat.replace(/[a-zA-Z\d]/g, '9');
 
-          self.inputProperties = {
-            class: self.config.inputProperties && self.config.inputProperties.class ? self.config.inputProperties.class : self.getDefaultConfiguration().inputProperties.class,
-            placeholder: self.config.inputProperties && self.config.inputProperties.placeholder ? self.config.inputProperties.placeholder : angular.noop()
-          };
+                    self.inputProperties = {
+                        class: self.config.inputProperties && self.config.inputProperties.class ? self.config.inputProperties.class : self.getDefaultConfiguration().inputProperties.class,
+                        placeholder: self.config.inputProperties && self.config.inputProperties.placeholder ? self.config.inputProperties.placeholder : angular.noop()
+                    };
 
-          self.style = {
-            fontColor: self.config.fontColor || self.getDefaultConfiguration().fontColor,
-            background: self.config.background || self.getDefaultConfiguration().background
-          };
+                    self.style = {
+                        fontColor: self.config.fontColor || self.getDefaultConfiguration().fontColor,
+                        background: self.config.background || self.getDefaultConfiguration().background
+                    };
 
-          if (self.ngModel && self.ngModel instanceof Date) {
-            self.gumgaDateValue = self.ngModel;
-            self.setNgModel(self.gumgaDateValue);
-          } else if (self.ngModel && typeof self.ngModel == "string") {
-            var date = moment(self.ngModel).toDate();
-            self.gumgaDateValue = date;
-            self.setNgModel(self.gumgaDateValue);
-          } else {
-            self.gumgaDateValue = new Date();
-          }
-        };
+                    if (self.ngModel && self.ngModel instanceof Date) {
+                        self.gumgaDateValue = self.ngModel;
+                        self.setNgModel(self.gumgaDateValue);
+                    } else if (self.ngModel && typeof self.ngModel == "string") {
+                        var date = moment(self.ngModel).toDate();
+                        self.gumgaDateValue = date;
+                        self.setNgModel(self.gumgaDateValue);
+                    } else {
+                        self.gumgaDateValue = new Date();
+                    }
+                };
 
-        var isDate = function isDate(s) {
-          var separators = ['\\.', '\\-', '\\/'];
-          var bits = s.split(new RegExp(separators.join('|'), 'g'));
-          var d = new Date(bits[2], bits[1] - 1, bits[0]);
-          return d.getFullYear() == bits[2] && d.getMonth() + 1 == bits[1];
-        };
+                var isDate = function isDate(s) {
+                    var separators = ['\\.', '\\-', '\\/'];
+                    var bits = s.split(new RegExp(separators.join('|'), 'g'));
+                    var d = new Date(bits[2], bits[1] - 1, bits[0]);
+                    return d.getFullYear() == bits[2] && d.getMonth() + 1 == bits[1];
+                };
 
-        self.alterView = function (view) {
-          $timeout(function () {
-            self.view = view;
-            if (view == 'months') {
-              if (!self.years) self.years = self.range(self.getMinYear(), self.getMaxYear());
-              handlingScroll();
+                self.alterView = function (view) {
+                    $timeout(function () {
+                        self.view = view;
+                        if (view == 'months') {
+                            if (!self.years) self.years = self.range(self.getMinYear(), self.getMaxYear());
+                            handlingScroll();
+                        }
+                    });
+                };
+
+                var calendar = undefined;
+
+                var animateScroll = function animateScroll(size, scrollTop) {
+                    angular.element(calendar).animate({ scrollTop: size }, 400);
+                };
+
+                $timeout(function () {
+                    calendar = document.getElementById('year-and-month-' + self.uid);
+                }, 1000);
+
+                var handlingScroll = function handlingScroll() {
+                    $timeout(function () {
+                        var size = self.getScrollSize();
+                        animateScroll(size, calendar.scrollTop);
+                    });
+                };
+
+                self.handlingHours = function (num) {
+                    self.gumgaDateValue.setHours(self.gumgaDateValue.getHours() + num);
+                    self.setNgModel(self.gumgaDateValue);
+                };
+
+                self.handlingMinutes = function (num) {
+                    self.gumgaDateValue.setMinutes(self.gumgaDateValue.getMinutes() + num);
+                    self.setNgModel(self.gumgaDateValue);
+                };
+
+                self.getFormatLength = function () {
+                    return self.inputFormat ? self.inputFormat.replace(/[^a-zA-Z0-9]/g, '').length : 0;
+                };
+
+                self.setGumgaDateValue = function (value, event) {
+                    if (!value) return;
+                    checkDateIsValid(value);
+                };
+
+                function checkDateIsValid(value, ignoreModel) {
+                    self.inputFormat = self.config.format ? self.config.format : self.getDefaultConfiguration().format;
+                    var minYear = self.getMinYear();
+                    var maxYear = self.getMaxYear();
+                    var timeZone = self.config.timeZone ? self.config.timeZone : self.getDefaultConfiguration().timeZone;
+                    var date = moment(value, self.inputFormat.toUpperCase().replace('HH:MM', 'hh:mm')).tz(timeZone).toDate();
+                    if (value && date != 'Invalid Date' && date.getFullYear() >= minYear && date.getFullYear() <= maxYear) {
+                        self.gumgaDateValue = date;
+                        if (!ignoreModel) {
+                            self.setNgModel(self.gumgaDateValue);
+                        }
+                        if (self.config.change) self.config.change(self.ngModel);
+                    } else {
+                        self.value = null;
+                    }
+                }
+
+                self.getMinYear = function () {
+                    return self.config.minYear ? self.config.minYear : self.getDefaultConfiguration().minYear;
+                };
+
+                self.getMaxYear = function () {
+                    return self.config.maxYear ? self.config.maxYear : self.getDefaultConfiguration().maxYear;
+                };
+
+                self.getMonth = function () {
+                    if (!self.gumgaDateValue || !(self.gumgaDateValue instanceof Date)) return;
+                    return self.getGumgaMonths()[self.gumgaDateValue.getMonth()];
+                };
+
+                self.setDay = function (day, evt) {
+                    if (!self.gumgaDateValue || !(self.gumgaDateValue instanceof Date)) return;
+                    var update = new Date();
+                    update.setYear(day.year);
+                    update.setMonth(day.mouth);
+                    update.setDate(day.value);
+                    update.setHours(self.gumgaDateValue.getHours());
+                    update.setMinutes(self.gumgaDateValue.getMinutes());
+                    update.setSeconds(self.gumgaDateValue.getSeconds());
+                    self.gumgaDateValue = update;
+                    self.setNgModel(self.gumgaDateValue);
+                    if (self.config.change) self.config.change(self.ngModel);
+                    if (self.config.hasOwnProperty('closeOnChange') ? self.config.closeOnChange : self.getDefaultConfiguration().closeOnChange) {
+                        self.config.close();
+                    }
+                };
+
+                self.setYearAndMonth = function (year, month) {
+                    if (!self.gumgaDateValue || !(self.gumgaDateValue instanceof Date)) return;
+                    self.getGumgaMonths(true).forEach(function (gumgaMonth, index) {
+                        if (gumgaMonth == month) {
+                            var update = new Date();
+                            update.setYear(year);
+                            update.setMonth(index);
+                            update.setDate(self.gumgaDateValue.getDate());
+                            update.setHours(self.gumgaDateValue.getHours());
+                            update.setMinutes(self.gumgaDateValue.getMinutes());
+                            update.setSeconds(self.gumgaDateValue.getSeconds());
+                            self.gumgaDateValue = update;
+                            self.setNgModel(self.gumgaDateValue);
+                            self.alterView('days');
+                        }
+                    });
+                };
+
+                self.getYear = function () {
+                    if (!self.gumgaDateValue) return;
+                    return self.gumgaDateValue.getFullYear();
+                };
+
+                self.isToday = function (day) {
+                    return day.value == self.gumgaDateValue.getDate() && day.mouth == self.gumgaDateValue.getMonth();
+                };
+
+                self.isThatMonth = function (year, mouth) {
+                    return self.getGumgaMonths(true)[self.gumgaDateValue.getMonth()] == mouth && self.gumgaDateValue.getFullYear() == year;
+                };
+
+                self.config.open = function (event) {
+                    if (event) event.stopPropagation();
+                    if (self.config.hasOwnProperty('showCalendar') ? self.config.showCalendar : self.getDefaultConfiguration().showCalendar) {
+                        self.opened = true;
+                        setType();
+                        newCalendar(self.gumgaDateValue.getMonth(), self.gumgaDateValue.getFullYear());
+                    }
+                };
+
+                self.config.close = function () {
+                    self.opened = false;
+                    self.alterView('days');
+                };
+
+                var getDaysInMonth = function getDaysInMonth(date) {
+                    return new Date(date.getFullYear(), date.getMonth(), 0).getDate();
+                };
+
+                self.handlingMonths = function (date, num) {
+                    self.gumgaDateValue = moment(date).add(num, 'months').toDate();
+                    self.setNgModel(self.gumgaDateValue);
+                    if (self.view == 'months') {
+                        handlingScroll();
+                    }
+                };
+
+                self.$watch('config', function () {
+                    init();
+                }, true);
+
+                self.$watch('ngModel', function (value) {
+                    $timeout(function () {
+                        if (self.ngModel && self.ngModel instanceof Date) {
+                            self.gumgaDateValue = self.ngModel;
+                            newCalendar(value.getMonth(), value.getFullYear());
+                            self.value = formatDate(angular.copy(value), self.inputFormat);
+                        }
+                        if (self.ngModel && typeof self.ngModel == "string") {
+                            var date = moment(self.ngModel).toDate();
+                            self.gumgaDateValue = date;
+                            newCalendar(date.getMonth(), date.getFullYear());
+                            var timeZone = self.config.timeZone ? self.config.timeZone : self.getDefaultConfiguration().timeZone;
+                            var dateValue = moment(self.value, self.inputFormat.toUpperCase().replace('HH:MM', 'hh:mm')).tz(timeZone).toDate();
+                            if (self.value != formatDate(angular.copy(date), self.inputFormat) && dateValue.getMinutes() != date.getMinutes() + 1) {
+                                checkDateIsValid(formatDate(angular.copy(date), self.inputFormat), true);
+                            }
+                        }
+                        if (!value && !self.inputFocused) {
+                            self.gumgaDateValue = new Date();
+                            newCalendar(self.gumgaDateValue.getMonth(), self.gumgaDateValue.getFullYear());
+                            self.value = null;
+                        }
+                    });
+                }, true);
+
+                self.$watch('value', function (value) {
+                    return value ? self.setGumgaDateValue(value) : self.ngModel = null;
+                });
+
+                self.setNgModel = function (value) {
+                    var timeZone = self.config.timeZone ? self.config.timeZone : self.getDefaultConfiguration().timeZone;
+                    self.ngModel = moment.tz(value, timeZone).format();
+                    newCalendar(value.getMonth(), value.getFullYear());
+                    self.value = formatDate(angular.copy(value), self.inputFormat);
+                };
+
+                elm.bind('click', function (event) {
+                    event.stopPropagation();
+                });
+
+                var incrementDay = function incrementDay(event) {
+                    var day = undefined;
+                    switch (event.keyCode) {
+                        case 38:
+                            //UP
+                            day = moment(self.gumgaDateValue).add(-7, 'days').toDate();
+                            break;
+                        case 40:
+                            //DOWN
+                            day = moment(self.gumgaDateValue).add(+7, 'days').toDate();
+                            break;
+                        case 37:
+                            //LEFT
+                            day = moment(self.gumgaDateValue).add(-1, 'days').toDate();
+                            break;
+                        case 39:
+                            //RIGHT
+                            day = moment(self.gumgaDateValue).add(+1, 'days').toDate();
+                            break;
+                        case 13:
+                            //ENTER
+                            self.setNgModel(self.gumgaDateValue);
+                            self.config.close();
+                            break;
+                        case 9:
+                            var change = self.config.hasOwnProperty('changeDateOnTab') ? self.config.changeDateOnTab : self.getDefaultConfiguration().changeDateOnTab;
+                            if (self.inputFocused && !self.ngModel && change) {
+                                self.gumgaDateValue = new Date();
+                                self.setNgModel(self.gumgaDateValue);
+                            } else if (!self.inputFocused) {
+                                self.config.close();
+                            }
+                            break;
+                    }
+
+                    $timeout(function () {
+                        if (!self.opened || !day) return;
+                        event.stopPropagation();
+                        self.gumgaDateValue = day;
+                        self.setNgModel(self.gumgaDateValue);
+                    });
+                };
+
+                var incrementMinutes = function incrementMinutes(event) {
+                    var minutes = 0;
+                    switch (event.keyCode) {
+                        case 38:
+                            //UP
+                            minutes = moment(self.gumgaDateValue).add(+1, 'minutes').toDate();
+                            break;
+                        case 40:
+                            //DOWN
+                            minutes = moment(self.gumgaDateValue).add(-1, 'minutes').toDate();
+                            break;
+                    }
+                    $timeout(function () {
+                        if (minutes == 0 || !self.opened) return;
+                        event.stopPropagation();
+                        self.gumgaDateValue = minutes;
+                        self.setNgModel(self.gumgaDateValue);
+                    });
+                };
+
+                var listenerClick = document.addEventListener('click', function (evt) {
+                    $timeout(self.config.close);
+                });
+
+                var getOthersGumgaDate = function getOthersGumgaDate() {
+                    var dates = angular.element('gumga-date');
+                    var others = dates.filter(function (i) {
+                        return !angular.equals(dates[i], elm[0]);
+                    });
+                    return others;
+                };
+
+                elm.find('input')[0].addEventListener('focus', function () {
+                    angular.forEach(getOthersGumgaDate(), function (elment) {
+                        angular.element(elment).find('div.gumga-date').scope().config.close();
+                    });
+                });
+
+                var listenerKey = document.addEventListener('keydown', function (event) {
+                    self.opened && self.view == 'days' ? incrementDay(event) : angular.noop();
+                    self.opened && self.view == 'hours' ? incrementMinutes(event) : angular.noop();
+                });
+
+                self.$on('$destroy', function () {
+                    document.removeEventListener('click', listenerClick);
+                    document.removeEventListener('keyup', listenerKey);
+                });
+
+                var newCalendar = function newCalendar(mouth, year) {
+                    if (!self.opened) return;
+                    var primaryDay = new Date(year, mouth, 1),
+                        count = 1;
+                    var possibilities = new Array(42);
+
+                    for (var x = 0; x < possibilities.length; x++) {
+                        possibilities[x] = "";
+                    }
+
+                    for (var _x = primaryDay.getDay(); _x < possibilities.length; _x++) {
+                        var data = new Date(year, mouth, count);
+                        possibilities[_x] = { value: data.getDate() };
+                        possibilities[_x].style = data.getMonth() != mouth ? 'color: #b7aaaa !important;' : '';
+                        possibilities[_x].style += possibilities[_x].value < 10 ? 'padding-left: 9.75px;padding-right: 9.75px;' : '';
+                        possibilities[_x].mouth = data.getMonth();
+                        possibilities[_x].year = data.getFullYear();
+                        count++;
+                    }
+
+                    var previousMonth = moment(new Date(year, mouth, 1)).add(-1, 'months');
+                    for (var i = 0; i < primaryDay.getDay(); i++) {
+                        possibilities[primaryDay.getDay() - 1 - i] = {
+                            value: previousMonth.daysInMonth() - i,
+                            style: 'color: #b7aaaa !important;',
+                            mouth: previousMonth.toDate().getMonth(),
+                            year: previousMonth.toDate().getFullYear()
+                        };
+                    }
+                    self.rows = possibilities;
+                };
+
+                self.getPosition = function () {
+                    var position = self.config.position ? self.config.position : self.getDefaultConfiguration().position;
+                    switch (position.toUpperCase()) {
+                        case 'LEFT_BOTTOM':
+                            return 'top: 25px;left: -235px;';
+                            break;
+                        case 'LEFT_TOP':
+                            if (self.view == 'days' || self.view == 'months') return 'top: -290px;left: -235px;';
+                            if (self.view == 'hours') return 'top: -130px;left: -235px;';
+                            break;
+                        case 'BOTTOM_LEFT':
+                            return 'left: 15px;';
+                            break;
+                        case 'BOTTOM_RIGHT':
+                            return 'right: 15px;';
+                            break;
+                        case 'RIGHT_BOTTOM':
+                            return 'right: -235px;';
+                            break;
+                        case 'RIGHT_TOP':
+                            if (self.view == 'days' || self.view == 'months') return 'top: -290px;right: -235px;';
+                            if (self.view == 'hours') return 'top: -130px;right: -235px;';
+                            break;
+                        case 'TOP_LEFT':
+                            if (self.view == 'days' || self.view == 'months') return 'top: -325px;left: 15px;';
+                            if (self.view == 'hours') return 'top: -165px; left: 15px;';
+                            break;
+                        case 'TOP_RIGHT':
+                            if (self.view == 'days' || self.view == 'months') return 'top: -325px;right: 15px;';
+                            if (self.view == 'hours') return 'top: -165px; right: 15px;';
+                            break;
+                    }
+                };
             }
-          });
         };
-
-        var calendar = undefined;
-
-        var animateScroll = function animateScroll(size, scrollTop) {
-          angular.element(calendar).animate({ scrollTop: size }, 400);
-        };
-
-        $timeout(function () {
-          calendar = document.getElementById('year-and-month-' + self.uid);
-        }, 1000);
-
-        var handlingScroll = function handlingScroll() {
-          $timeout(function () {
-            var size = self.getScrollSize();
-            animateScroll(size, calendar.scrollTop);
-          });
-        };
-
-        self.handlingHours = function (num) {
-          self.gumgaDateValue.setHours(self.gumgaDateValue.getHours() + num);
-          self.setNgModel(self.gumgaDateValue);
-        };
-
-        self.handlingMinutes = function (num) {
-          self.gumgaDateValue.setMinutes(self.gumgaDateValue.getMinutes() + num);
-          self.setNgModel(self.gumgaDateValue);
-        };
-
-        self.getFormatLength = function () {
-          return self.inputFormat ? self.inputFormat.replace(/[^a-zA-Z0-9]/g, '').length : 0;
-        };
-
-        self.setGumgaDateValue = function (value, event) {
-          if (!value) return;
-          checkDateIsValid(value);
-        };
-
-        function checkDateIsValid(value, ignoreModel) {
-          self.inputFormat = self.config.format ? self.config.format : self.getDefaultConfiguration().format;
-          var minYear = self.getMinYear();
-          var maxYear = self.getMaxYear();
-          var timeZone = self.config.timeZone ? self.config.timeZone : self.getDefaultConfiguration().timeZone;
-          var date = moment(value, self.inputFormat.toUpperCase().replace('HH:MM', 'hh:mm')).tz(timeZone).toDate();
-          if (value && date != 'Invalid Date' && date.getFullYear() >= minYear && date.getFullYear() <= maxYear) {
-            self.gumgaDateValue = date;
-            if (!ignoreModel) {
-              self.setNgModel(self.gumgaDateValue);
-            }
-            if (self.config.change) self.config.change(self.ngModel);
-          } else {
-            self.value = null;
-          }
-        }
-
-        self.getMinYear = function () {
-          return self.config.minYear ? self.config.minYear : self.getDefaultConfiguration().minYear;
-        };
-
-        self.getMaxYear = function () {
-          return self.config.maxYear ? self.config.maxYear : self.getDefaultConfiguration().maxYear;
-        };
-
-        self.getMonth = function () {
-          if (!self.gumgaDateValue || !(self.gumgaDateValue instanceof Date)) return;
-          return self.getGumgaMonths()[self.gumgaDateValue.getMonth()];
-        };
-
-        self.setDay = function (day) {
-          if (!self.gumgaDateValue || !(self.gumgaDateValue instanceof Date)) return;
-          var update = new Date();
-          update.setYear(day.year);
-          update.setMonth(day.mouth);
-          update.setDate(day.value);
-          update.setHours(self.gumgaDateValue.getHours());
-          update.setMinutes(self.gumgaDateValue.getMinutes());
-          update.setSeconds(self.gumgaDateValue.getSeconds());
-          self.gumgaDateValue = update;
-          self.setNgModel(self.gumgaDateValue);
-          if (self.config.change) self.config.change(self.ngModel);
-          if (self.config.hasOwnProperty('closeOnChange') ? self.config.closeOnChange : self.getDefaultConfiguration().closeOnChange) {
-            self.config.close();
-          }
-        };
-
-        self.setYearAndMonth = function (year, month) {
-          if (!self.gumgaDateValue || !(self.gumgaDateValue instanceof Date)) return;
-          self.getGumgaMonths(true).forEach(function (gumgaMonth, index) {
-            if (gumgaMonth == month) {
-              var update = new Date();
-              update.setYear(year);
-              update.setMonth(index);
-              update.setDate(self.gumgaDateValue.getDate());
-              update.setHours(self.gumgaDateValue.getHours());
-              update.setMinutes(self.gumgaDateValue.getMinutes());
-              update.setSeconds(self.gumgaDateValue.getSeconds());
-              self.gumgaDateValue = update;
-              self.setNgModel(self.gumgaDateValue);
-              self.alterView('days');
-            }
-          });
-        };
-
-        self.getYear = function () {
-          if (!self.gumgaDateValue) return;
-          return self.gumgaDateValue.getFullYear();
-        };
-
-        self.isToday = function (day) {
-          return day.value == self.gumgaDateValue.getDate() && day.mouth == self.gumgaDateValue.getMonth();
-        };
-
-        self.isThatMonth = function (year, mouth) {
-          return self.getGumgaMonths(true)[self.gumgaDateValue.getMonth()] == mouth && self.gumgaDateValue.getFullYear() == year;
-        };
-
-        self.config.open = function (event) {
-          if (event) event.stopPropagation();
-          if (self.config.hasOwnProperty('showCalendar') ? self.config.showCalendar : self.getDefaultConfiguration().showCalendar) {
-            self.opened = true;
-            setType();
-            newCalendar(self.gumgaDateValue.getMonth(), self.gumgaDateValue.getFullYear());
-          }
-        };
-
-        self.config.close = function () {
-          self.opened = false;
-          self.alterView('days');
-        };
-
-        var getDaysInMonth = function getDaysInMonth(date) {
-          return new Date(date.getFullYear(), date.getMonth(), 0).getDate();
-        };
-
-        self.handlingMonths = function (date, num) {
-          self.gumgaDateValue = moment(date).add(num, 'months').toDate();
-          self.setNgModel(self.gumgaDateValue);
-          if (self.view == 'months') {
-            handlingScroll();
-          }
-        };
-
-        self.$watch('config', function () {
-          init();
-        }, true);
-
-        self.$watch('ngModel', function (value) {
-          $timeout(function () {
-            if (self.ngModel && self.ngModel instanceof Date) {
-              self.gumgaDateValue = self.ngModel;
-              newCalendar(value.getMonth(), value.getFullYear());
-              self.value = formatDate(angular.copy(value), self.inputFormat);
-            }
-            if (self.ngModel && typeof self.ngModel == "string") {
-              var date = moment(self.ngModel).toDate();
-              self.gumgaDateValue = date;
-              newCalendar(date.getMonth(), date.getFullYear());
-              var timeZone = self.config.timeZone ? self.config.timeZone : self.getDefaultConfiguration().timeZone;
-              var dateValue = moment(self.value, self.inputFormat.toUpperCase().replace('HH:MM', 'hh:mm')).tz(timeZone).toDate();
-              if (self.value != formatDate(angular.copy(date), self.inputFormat) && dateValue.getMinutes() != date.getMinutes() + 1) {
-                checkDateIsValid(formatDate(angular.copy(date), self.inputFormat), true);
-              }
-            }
-            if (!value && !self.inputFocused) {
-              self.gumgaDateValue = new Date();
-              newCalendar(self.gumgaDateValue.getMonth(), self.gumgaDateValue.getFullYear());
-              self.value = null;
-            }
-          });
-        }, true);
-
-        self.$watch('value', function (value) {
-          return value ? self.setGumgaDateValue(value) : self.ngModel = null;
-        });
-
-        self.setNgModel = function (value) {
-          var timeZone = self.config.timeZone ? self.config.timeZone : self.getDefaultConfiguration().timeZone;
-          self.ngModel = moment.tz(value, timeZone).format();
-          newCalendar(value.getMonth(), value.getFullYear());
-          self.value = formatDate(angular.copy(value), self.inputFormat);
-        };
-
-        elm.bind('click', function (event) {
-          event.stopPropagation();
-        });
-
-        var incrementDay = function incrementDay(event) {
-          var day = undefined;
-          switch (event.keyCode) {
-            case 38:
-              //UP
-              day = moment(self.gumgaDateValue).add(-7, 'days').toDate();
-              break;
-            case 40:
-              //DOWN
-              day = moment(self.gumgaDateValue).add(+7, 'days').toDate();
-              break;
-            case 37:
-              //LEFT
-              day = moment(self.gumgaDateValue).add(-1, 'days').toDate();
-              break;
-            case 39:
-              //RIGHT
-              day = moment(self.gumgaDateValue).add(+1, 'days').toDate();
-              break;
-            case 13:
-              //ENTER
-              self.setNgModel(self.gumgaDateValue);
-              self.config.close();
-              break;
-            case 9:
-              var change = self.config.hasOwnProperty('changeDateOnTab') ? self.config.changeDateOnTab : self.getDefaultConfiguration().changeDateOnTab;
-              if (self.inputFocused && !self.ngModel && change) {
-                self.gumgaDateValue = new Date();
-                self.setNgModel(self.gumgaDateValue);
-              } else if (!self.inputFocused) {
-                self.config.close();
-              }
-              break;
-          }
-
-          $timeout(function () {
-            if (!self.opened || !day) return;
-            event.stopPropagation();
-            self.gumgaDateValue = day;
-            self.setNgModel(self.gumgaDateValue);
-          });
-        };
-
-        var incrementMinutes = function incrementMinutes(event) {
-          var minutes = 0;
-          switch (event.keyCode) {
-            case 38:
-              //UP
-              minutes = moment(self.gumgaDateValue).add(+1, 'minutes').toDate();
-              break;
-            case 40:
-              //DOWN
-              minutes = moment(self.gumgaDateValue).add(-1, 'minutes').toDate();
-              break;
-          }
-          $timeout(function () {
-            if (minutes == 0 || !self.opened) return;
-            event.stopPropagation();
-            self.gumgaDateValue = minutes;
-            self.setNgModel(self.gumgaDateValue);
-          });
-        };
-
-        var listenerClick = document.addEventListener('click', function (event) {
-          $timeout(self.config.close);
-        });
-
-        var listenerKey = document.addEventListener('keydown', function (event) {
-          self.opened && self.view == 'days' ? incrementDay(event) : angular.noop();
-          self.opened && self.view == 'hours' ? incrementMinutes(event) : angular.noop();
-        });
-
-        self.$on('$destroy', function () {
-          document.removeEventListener('click', listenerClick);
-          document.removeEventListener('keyup', listenerKey);
-        });
-
-        var newCalendar = function newCalendar(mouth, year) {
-          if (!self.opened) return;
-          var primaryDay = new Date(year, mouth, 1),
-              count = 1;
-          var possibilities = new Array(42);
-
-          for (var x = 0; x < possibilities.length; x++) {
-            possibilities[x] = "";
-          }
-
-          for (var _x = primaryDay.getDay(); _x < possibilities.length; _x++) {
-            var data = new Date(year, mouth, count);
-            possibilities[_x] = { value: data.getDate() };
-            possibilities[_x].style = data.getMonth() != mouth ? 'color: #b7aaaa !important;' : '';
-            possibilities[_x].style += possibilities[_x].value < 10 ? 'padding-left: 9.75px;padding-right: 9.75px;' : '';
-            possibilities[_x].mouth = data.getMonth();
-            possibilities[_x].year = data.getFullYear();
-            count++;
-          }
-
-          var previousMonth = moment(new Date(year, mouth, 1)).add(-1, 'months');
-          for (var i = 0; i < primaryDay.getDay(); i++) {
-            possibilities[primaryDay.getDay() - 1 - i] = {
-              value: previousMonth.daysInMonth() - i,
-              style: 'color: #b7aaaa !important;',
-              mouth: previousMonth.toDate().getMonth(),
-              year: previousMonth.toDate().getFullYear()
-            };
-          }
-          self.rows = possibilities;
-        };
-
-        self.getPosition = function () {
-          var position = self.config.position ? self.config.position : self.getDefaultConfiguration().position;
-          switch (position.toUpperCase()) {
-            case 'LEFT_BOTTOM':
-              return 'top: 25px;left: -235px;';
-              break;
-            case 'LEFT_TOP':
-              if (self.view == 'days' || self.view == 'months') return 'top: -290px;left: -235px;';
-              if (self.view == 'hours') return 'top: -130px;left: -235px;';
-              break;
-            case 'BOTTOM_LEFT':
-              return 'left: 15px;';
-              break;
-            case 'BOTTOM_RIGHT':
-              return 'right: 15px;';
-              break;
-            case 'RIGHT_BOTTOM':
-              return 'right: -235px;';
-              break;
-            case 'RIGHT_TOP':
-              if (self.view == 'days' || self.view == 'months') return 'top: -290px;right: -235px;';
-              if (self.view == 'hours') return 'top: -130px;right: -235px;';
-              break;
-            case 'TOP_LEFT':
-              if (self.view == 'days' || self.view == 'months') return 'top: -325px;left: 15px;';
-              if (self.view == 'hours') return 'top: -165px; left: 15px;';
-              break;
-            case 'TOP_RIGHT':
-              if (self.view == 'days' || self.view == 'months') return 'top: -325px;right: 15px;';
-              if (self.view == 'hours') return 'top: -165px; right: 15px;';
-              break;
-          }
-        };
-      }
     };
-  };
 
-  GumgaDate.$inject = ['$timeout', '$filter', '$locale', 'GumgaDateService'];
+    GumgaDate.$inject = ['$timeout', '$filter', '$locale', 'GumgaDateService'];
 
-  angular.module('gumga.date', ['gumga.date.service', 'gumga.date.mask']).directive('gumgaDate', GumgaDate);
+    angular.module('gumga.date', ['gumga.date.service', 'gumga.date.mask']).directive('gumgaDate', GumgaDate);
 })();
 
 /***/ }),

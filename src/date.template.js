@@ -98,7 +98,7 @@ export default `
       <li ng-repeat="weekday in getWeekDays()">{{weekday}}</li>
     </ul>
     <ul class="days" ng-show="view == 'days'">
-      <li data-ng-click="setDay(row)" data-ng-repeat="row in rows track by $index">
+      <li data-ng-click="setDay(row, $event)" data-ng-repeat="row in rows track by $index">
           <span ng-class="{'active' : isToday(row)}" style="{{row.style}}">{{row.value}}</span>
       </li>
     </ul>
