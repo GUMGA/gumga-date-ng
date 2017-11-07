@@ -101,6 +101,10 @@ angular.module('yourApp', ['gumga.date']);
   })
 
 
+  //VOCÊ PODE ADICONAR UMA DATA COMO FERIADO
+  GumgaDateServiceProvider.addHoliday("2017-11-03", 'Feriado de exemplo');
+
+
   //VOCÊ PODE FAZER CONFIGURAÇÕES ESPECIFICAS PARA UM DATE.
   //TODOS OS ATRIBUTOS QUE SÃO USADO NA CONFIGURAÇÃO DEFAULT, PODEM SER USADOS ABAIXO.
   $scope.config = {

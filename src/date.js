@@ -1,3 +1,5 @@
+import { DateHoliday } from './date.holiday';
+
 (() => {
     'use strict';
 
@@ -18,6 +20,7 @@
             },
             require: '^ngModel',
             link: (scope, elm, attrs) => {
+               
                 let self = scope;
                 self.uid = Math.floor((Math.random() * 99999999));
 
@@ -31,6 +34,14 @@
                     let input = elm.find('input');
                     input.focus();
                 }
+
+                self.isHoliday = row => new DateHoliday(row.year + '-' + (row.mouth+1) + '-' + row.value, GumgaDateService.getHolidays()).isHoliday();
+                
+
+                self.getNameHoliday = row => new DateHoliday(row.year + '-' + (row.mouth+1) + '-' + row.value, GumgaDateService.getHolidays()).getNameHoliday();
+                
+
+                self.getWeekdayClass = row => moment(row.year + '-' + (row.mouth+1) + '-' + row.value, 'YYYY-MM-DD').format('dddd').toLowerCase()
 
                 self.getDefaultConfiguration = () => GumgaDateService.getDefaultConfiguration();
 
