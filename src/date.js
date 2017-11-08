@@ -20,6 +20,13 @@ import { DateHoliday } from './date.holiday';
             },
             require: '^ngModel',
             link: (scope, elm, attrs) => {
+
+                moment.fn.holiday = function(_holidays) {
+                    var diff = 1+ (0 | (this._d.getDate() - 1) / 7),
+                        memorial = (this._d.getDay() === 1 && (this._d.getDate() + 7) > 30) ? "5" : null;
+                
+                    return (_holidays['M'][this.format('MM/DD')] || _holidays['W'][this.format('M/'+ (memorial || diff) +'/d')]);
+                };
                
                 let self = scope;
                 self.uid = Math.floor((Math.random() * 99999999));

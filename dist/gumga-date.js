@@ -81,13 +81,6 @@ var _createClass = function () { function defineProperties(target, props) { for 
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
-moment.fn.holiday = function (_holidays) {
-    var diff = 1 + (0 | (this._d.getDate() - 1) / 7),
-        memorial = this._d.getDay() === 1 && this._d.getDate() + 7 > 30 ? "5" : null;
-
-    return _holidays['M'][this.format('MM/DD')] || _holidays['W'][this.format('M/' + (memorial || diff) + '/d')];
-};
-
 var DateHoliday = exports.DateHoliday = function () {
     function DateHoliday(_date, _holidays) {
         _classCallCheck(this, DateHoliday);
@@ -97,12 +90,12 @@ var DateHoliday = exports.DateHoliday = function () {
     }
 
     _createClass(DateHoliday, [{
-        key: 'isHoliday',
+        key: "isHoliday",
         value: function isHoliday() {
             return this.date.holiday(this._holidays) != undefined;
         }
     }, {
-        key: 'getNameHoliday',
+        key: "getNameHoliday",
         value: function getNameHoliday() {
             return this.date.holiday(this._holidays);
         }
@@ -772,6 +765,13 @@ var _date = __webpack_require__(0);
             },
             require: '^ngModel',
             link: function link(scope, elm, attrs) {
+
+                moment.fn.holiday = function (_holidays) {
+                    var diff = 1 + (0 | (this._d.getDate() - 1) / 7),
+                        memorial = this._d.getDay() === 1 && this._d.getDate() + 7 > 30 ? "5" : null;
+
+                    return _holidays['M'][this.format('MM/DD')] || _holidays['W'][this.format('M/' + (memorial || diff) + '/d')];
+                };
 
                 var self = scope;
                 self.uid = Math.floor(Math.random() * 99999999);
