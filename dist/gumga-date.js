@@ -804,6 +804,11 @@ var _date = __webpack_require__(0);
                 };
 
                 self.dateBlur = function (evt) {
+                    $timeout(function () {
+                        if (self.opened) {
+                            self.config.close();
+                        }
+                    }, 100);
                     if (self.ngBlur) {
                         self.ngBlur({ $event: evt });
                     }

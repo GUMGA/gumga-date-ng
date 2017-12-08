@@ -53,6 +53,11 @@ import { DateHoliday } from './date.holiday';
                 self.getDefaultConfiguration = () => GumgaDateService.getDefaultConfiguration();
 
                 self.dateBlur = (evt) => {
+                    $timeout(() => {
+                        if(self.opened){
+                            self.config.close();
+                        }
+                    }, 100);
                     if (self.ngBlur) {
                         self.ngBlur({$event: evt});
                     }
