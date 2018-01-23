@@ -57,7 +57,7 @@ import { DateHoliday } from './date.holiday';
                         if(self.opened){
                             self.config.close();
                         }
-                    }, 100);
+                    }, 200);
                     if (self.ngBlur) {
                         self.ngBlur({$event: evt});
                     }
