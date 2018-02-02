@@ -53,13 +53,14 @@ import { DateHoliday } from './date.holiday';
                 self.getDefaultConfiguration = () => GumgaDateService.getDefaultConfiguration();
 
                 self.dateBlur = (evt) => {
-                    $timeout(() => {
-                        if(self.opened){
-                            self.config.close();
-                        }
-                    }, 200);
                     if (self.ngBlur) {
                         self.ngBlur({$event: evt});
+                    }
+                }
+
+                self.keyPressInput = evt => {
+                    if(evt.keyCode == 9 && self.opened){
+                        self.config.close();
                     }
                 }
 
@@ -295,7 +296,7 @@ import { DateHoliday } from './date.holiday';
                     return new Date(date.getFullYear(), date.getMonth(), 0).getDate();
                 };
 
-                self.handlingMonths = function (date, num) {
+                self.handlingMonths = function (date, num, evt) {
                     self.gumgaDateValue = moment(date).add(num, 'months').toDate();
                     self.setNgModel(self.gumgaDateValue)
                     if (self.view == 'months') {

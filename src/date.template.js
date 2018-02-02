@@ -16,6 +16,7 @@ const input = useGumgaLayout() ?
               ng-model="value"
               gumga-date-mask="{{mask}}"
               ng-disabled="ngDisabled"
+              ng-keydown="keyPressInput($event)"
               class="gumga-date-input {{inputProperties.class}}"
               placeholder="{{inputProperties.placeholder}} "/>
         <span class="bar"></span>
@@ -29,6 +30,7 @@ const input = useGumgaLayout() ?
     <input  ng-focus="config.open();inputFocused = true;"
             ng-blur="inputFocused = false;dateBlur($event);"
             ng-model="value"
+            ng-keydown="keyPressInput($event)"
             gumga-date-mask="{{mask}}"
             ng-disabled="ngDisabled"
             class="gumga-date-input {{inputProperties.class}}"

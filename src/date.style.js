@@ -267,6 +267,8 @@ export default `
     text-align: center;
     bottom: 0;
     padding-top: 7px;
+    z-index: 2;
+    cursor: pointer;
   }
 
   gumga-date li span.holiday {
