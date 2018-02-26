@@ -39,11 +39,12 @@ const input = useGumgaLayout() ?
   `;
 
 export default `
+  <div class="date-backdrop" ng-click="config.close()" ng-show="opened && isMobile"></div>
   <style>${style}</style>
 
   ${input}
 
-  <div class="gumga-date" ng-show="opened" id="gumga-date-{{uid}}" style="{{getPosition()}}">
+  <div class="gumga-date" ng-class="{'mobile-mode' : isMobile}" ng-show="opened" id="gumga-date-{{uid}}" style="{{getPosition()}}">
     <div class="month" style="background:{{config.background ? config.background : getDefaultConfiguration().background}}">
       <ul>
         <span data-ng-click="alterView('hours')"
@@ -85,11 +86,11 @@ export default `
 
     <div class="year-and-month" id="year-and-month-{{uid}}">
       <ul class="change-month" ng-show="view == 'months'" ng-repeat="year in years">
-        <span class="year">{{year}}</span>
+        <span class="year">{{::year}}</span>
 
         <div style="width: 170px;float: right;">
           <li data-ng-repeat="month in getGumgaMonths(true)" data-ng-click="setYearAndMonth(year, month)">
-            <span ng-class="{'active' : isThatMonth(year, month)}">{{month}}</span>
+            <span ng-class="{'active' : isThatMonth(year, month)}">{{::month}}</span>
           </li>
         </div>
 

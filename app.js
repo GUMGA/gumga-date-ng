@@ -5,7 +5,8 @@
 
         GumgaDateServiceProvider.setDefaultConfiguration({
           // fontColor: '#000'
-          maxYear: 3000
+          // maxYear: 3000
+          activeMobileMode: true
         })
 
         // GumgaDateServiceProvider.addHoliday(07, 10, 'Aniver do dasdasdsa');
@@ -27,6 +28,7 @@
         $scope.config = {
           fontColor: '#fff',
           format: 'dd/MM/yyyy',
+          // activeMobileMode: true,
           position: 'BOTTOM_LEFT',
           closeOnChange : true,
           changeDateOnTab: false,

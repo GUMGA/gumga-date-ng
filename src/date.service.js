@@ -4,6 +4,7 @@
   const GumgaService = () => {
 
       const configuration = {
+        activeMobileMode: false,
         background: '#1abc9c',
         primaryColor: '#1abc9c',
         fontColor: '#fff',

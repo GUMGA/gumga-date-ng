@@ -13,6 +13,7 @@ module.exports = {
     },
     devServer: {
         inline: true,
+        host: '192.168.112.229',
         port: 1111
     },
     plugins: [

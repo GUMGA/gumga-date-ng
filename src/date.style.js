@@ -37,6 +37,25 @@ export default `
     display: none;
   }
 
+  gumga-date .date-backdrop{
+    position: fixed;
+    left: 0;
+    top: 0;
+    background: rgba(33,33,33,1.0);
+    width: 100%;
+    transition: opacity 450ms;
+    height: 100%;
+    z-index: 999999999;
+    opacity: .48;
+  }
+
+  #gumga-date-{{uid}}.mobile-mode {
+    position: fixed;
+    left: 50% !important;
+    top: 50%;
+    transform: translate(-50%, -50%);
+  }
+
   .gumga-date {
     font-family: Verdana,sans-serif;
     box-sizing:border-box;
@@ -213,12 +232,12 @@ export default `
   }
 
   @media screen and (max-width:720px) {
-      .gumga-date > .weekdays li, .days li {width: 13.1%;}
+      .gumga-date > .weekdays li, .days li {width: 14.1%;}
   }
 
   @media screen and (max-width: 420px) {
       .gumga-date > .weekdays li, .days li {
-        width: 12.5%;
+        width: 14.1%;
       }
       .gumga-date > .days li .active {
         padding: 2px;
@@ -227,7 +246,7 @@ export default `
 
   @media screen and (max-width: 290px) {
       .gumga-date > .weekdays li, .days li {
-        width: 12.2%;
+        width: 14%;
       }
   }
   #gumga-date-{{uid}} > .month ul li {
